@@ -3,8 +3,8 @@
 set -xeu
 
 function install_packages() {
-  sudo apt update -y
-  sudo apt install -y \
+  apt update -y
+  apt install -y \
     wireguard \
     wireguard-tools \
     resolvconf \
@@ -13,11 +13,20 @@ function install_packages() {
     ;
 }
 
+# enable forwarding
 function tune_kernel_parameters() {
-  # enable forwarding
-  sudo sed -i '/#net.ipv4.ip_forward=1/s/^#//g' /etc/sysctl.conf
-  sudo sed -i '/#net.ipv6.conf.all.forwarding=1/s/^#//g' /etc/sysctl.conf
-  sudo sysctl -p
+  sed -i '/#net.ipv4.ip_forward=1/s/^#//g' /etc/sysctl.conf
+  sed -i '/#net.ipv6.conf.all.forwarding=1/s/^#//g' /etc/sysctl.conf
+  sed -i '/#net.ipv4.conf.all.proxy_arp=1/s/^#//g' /etc/sysctl.conf
+
+  sysctl -p
+
+  tee /etc/security/limits.conf << EOF
+  * hard nofile 64000
+  * soft nofile 64000
+  root hard nofile 64000
+  root soft nofile 64000
+  EOF
 }
 
 function get_private_key_from_ssm_parameter_store() {
@@ -27,14 +36,20 @@ function get_private_key_from_ssm_parameter_store() {
     --with-decryption \
     --output json | \
    jq -r '.Parameter.Value' | \
-   sudo tee /etc/wireguard/wg0.conf &> /dev/null
+   tee /etc/wireguard/wg0.conf &> /dev/null
 }
 
 function enable_wireguard_service() {
-  sudo modprobe wireguard
-  sudo wg-quick up wg0
-  sudo wg show
-  sudo systemctl enable wg-quick@wg0
+  # I think you don't need to enable kernel module in 20.04
+  # modprobe wireguard
+  wg-quick up wg0
+  wg show
+  systemctl enable wg-quick@wg0
+}
+
+function clean_up() {
+  # remove this script
+  rm -f /var/lib/cloud/instance/scripts/part-001
 }
 
 function main() {
@@ -42,6 +57,7 @@ function main() {
   tune_kernel_parameters
   get_private_key_from_ssm_parameter_store
   enable_wireguard_service
+  clean_up
 }
 
 main
