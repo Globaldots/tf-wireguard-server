@@ -9,9 +9,9 @@ resource "aws_ssm_parameter" "this" {
     "${path.module}/templates/wg0.conf.tmpl",
     {
       name        = var.name_prefix
-      address     = var.wg_cidr
+      address     = var.wg_address
       listen_port = var.wg_listen_port
-      routes      = var.wg_routes
+      cidr        = var.wg_cidr
       private_key = var.wg_private_key
       dns_server  = var.dns_server
       peers       = var.wg_peers

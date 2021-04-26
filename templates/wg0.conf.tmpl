@@ -9,10 +9,8 @@ ListenPort = ${listen_port}
 ###
 
 #TODO: get rid of hardcode for interface name
-%{ for cidr in routes ~}
 PostUp = iptables -t nat -A POSTROUTING -s ${cidr} -o ens5 -j MASQUERADE
 PostDown = iptables -t nat -D POSTROUTING -s ${cidr} -o ens5 -j MASQUERADE
-%{ endfor ~}
 
 PrivateKey = ${private_key}
 DNS = ${dns_server}

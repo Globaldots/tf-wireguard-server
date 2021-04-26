@@ -43,9 +43,12 @@ variable "key_name" {
   default = ""
 }
 
+variable "wg_address" {
+  default = "10.0.44.1/24"
+}
 
 variable "wg_cidr" {
-  default = "10.0.44.1/24"
+  default = "10.0.44.0/24"
 }
 
 variable "dns_server" {

@@ -21,12 +21,12 @@ function tune_kernel_parameters() {
 
   sysctl -p
 
-  tee /etc/security/limits.conf << EOF
-  * hard nofile 64000
-  * soft nofile 64000
-  root hard nofile 64000
-  root soft nofile 64000
-  EOF
+tee /etc/security/limits.conf << EOF
+* hard nofile 64000
+* soft nofile 64000
+root hard nofile 64000
+root soft nofile 64000
+EOF
 }
 
 # Get private key from SSM

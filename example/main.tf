@@ -92,10 +92,11 @@ module "wg" {
   //  availability_zones     = module.vpc.azs
   wg_private_key = wireguard_asymmetric_key.wg_key_pair.private_key
   wg_public_key  = wireguard_asymmetric_key.wg_key_pair.public_key
+  aws_region = "eu-central-1"
 
   wg_peers = {
     yurii = {
-      public_key  = "3W/mdLq9NXPLjivhFf+beJvRPvfFyjCrNRvaBWIf4gE="
+      public_key  = "dRWcZBv2++23GZ0DdoFLrXvGch4lcZ2Fj7yeaSAUB2I="
       allowed_ips = "10.0.44.2/32"
     }
   }
