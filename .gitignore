@@ -30,3 +30,6 @@ override.tf.json
 *plan
 .terraform-version
 .terraform.lock.hcl
+
+# IDE
+.idea/

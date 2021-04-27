@@ -1,6 +1,7 @@
 variable "aws_region" {
   default = "us-east-1"
 }
+
 variable "name_prefix" {
   type    = string
   default = "wireguard-server"
@@ -57,11 +58,6 @@ variable "dns_server" {
 
 variable "wg_listen_port" {
   default = "51820"
-}
-
-variable "wg_routes" {
-  default = []
-  //  default = ["10.0.44.0/24"]
 }
 
 variable "wg_private_key" {
