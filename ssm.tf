@@ -8,13 +8,15 @@ resource "aws_ssm_parameter" "this" {
   value = templatefile(
     "${path.module}/templates/wg0.conf.tmpl",
     {
-      name        = var.name_prefix
-      address     = var.wg_address
-      listen_port = var.wg_listen_port
-      cidr        = var.wg_cidr
-      private_key = var.wg_private_key
-      dns_server  = var.dns_server
-      peers       = var.wg_peers
+      name          = var.name_prefix
+      region        = var.aws_region
+      ssm_parameter = var.ssm_parameter
+      address       = var.wg_address
+      listen_port   = var.wg_listen_port
+      cidr          = var.wg_cidr
+      private_key   = var.wg_private_key
+      dns_server    = var.dns_server
+      peers         = var.wg_peers
     }
   )
 }

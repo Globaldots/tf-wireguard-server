@@ -9,6 +9,8 @@ ListenPort = ${listen_port}
 ###
 
 #TODO: get rid of hardcode for interface name
+
+PreUp = aws ssm get-parameter --region ${region} --name ${ssm_parameter} --with-decryption --output json | jq -r '.Parameter.Value' | tee /etc/wireguard/wg0.conf &> /dev/null
 PostUp = iptables -t nat -A POSTROUTING -s ${cidr} -o ens5 -j MASQUERADE
 PostDown = iptables -t nat -D POSTROUTING -s ${cidr} -o ens5 -j MASQUERADE
 

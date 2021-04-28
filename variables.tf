@@ -1,5 +1,11 @@
 variable "aws_region" {
+  type    = string
   default = "us-east-1"
+}
+
+variable "ssm_parameter" {
+  type    = string
+  default = ""
 }
 
 variable "name_prefix" {

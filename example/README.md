@@ -10,11 +10,14 @@
 
 | Name | Version |
 |------|---------|
+| null | n/a |
 | wireguard | 0.1.3 |
 
 ## Inputs
 
-No input.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| username | n/a | `string` | `"ubuntu"` | no |
 
 ## Outputs
 
