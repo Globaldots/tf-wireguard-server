@@ -49,8 +49,11 @@ function enable_wireguard_service() {
 
 # Cleanup userdata script
 function clean_up() {
-  rm -f /var/lib/cloud/instance/scripts/part-001
+  # remove this script
+  rm -f "$0"
 }
+
+trap clean_up SIGINT SIGTERM EXIT
 
 # Main
 function main() {
@@ -58,7 +61,6 @@ function main() {
   tune_kernel_parameters
   get_private_key_from_ssm_parameter_store
   enable_wireguard_service
-  clean_up
 }
 
 main
