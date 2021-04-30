@@ -97,29 +97,3 @@ module "wg" {
     }
   }
 }
-
-# Remote Wireguard restart (less recommended way)
-resource "null_resource" "remote_exec" {
-
-  triggers = {
-    key = "${uuid()}"
-  }
-
-  provisioner "remote-exec" {
-    connection {
-      type        = "ssh"
-      user        = var.username
-      host        = module.wg.wireguard_server_ip
-      private_key = file("~/.ssh/id_rsa")
-    }
-
-    inline = [
-      "sudo wg-quick down wg0",
-      "sudo wg-quick up wg0"
-    ]
-  }
-
-  depends_on = [
-    module.wg
-  ]
-}

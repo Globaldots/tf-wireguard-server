@@ -20,3 +20,29 @@ resource "aws_ssm_parameter" "this" {
     }
   )
 }
+
+
+resource "aws_ssm_document" "this" {
+  name          = "wg-reload"
+  document_type = "Command"
+
+  content = <<-EOT
+    {
+      "schemaVersion": "1.2",
+      "description": "Reload wireguard server configuration file.",
+      "parameters": {
+
+      },
+      "runtimeConfig": {
+        "aws:runShellScript": {
+          "properties": [
+            {
+              "id": "0.aws:runShellScript",
+              "runCommand": ["wg addconf wg0 <(wg-quick strip wg0)"]
+            }
+          ]
+        }
+      }
+    }
+  EOT
+}

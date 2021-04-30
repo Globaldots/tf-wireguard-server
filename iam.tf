@@ -14,10 +14,11 @@ module "iam_assumable_role" {
   ]
 
   custom_role_policy_arns = [
-    module.iam_policy.arn
+    module.iam_policy.arn,
+    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
   ]
 
-  number_of_custom_role_policy_arns = 1
+  number_of_custom_role_policy_arns = 2
 
   tags = var.tags
 }
