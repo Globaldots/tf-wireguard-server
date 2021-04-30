@@ -66,7 +66,9 @@ module "sg" {
 
 # Add your key for SSH access to VM
 module "key_pair" {
-  source     = "terraform-aws-modules/key-pair/aws"
+  source  = "terraform-aws-modules/key-pair/aws"
+  version = "1.0.0"
+
   key_name   = "deployer-one"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDyQd3GtSqa9baNUZyrTN8pWBxV5wHEUoHxeE1z5Yi66szMbT1tRjt/vOMLpHFzyb3Zbn0mdDGvcyrJocS0lP00ZQKTJi5e5WnVPaeGKU9nAy09aV33NsmuIi3y4jNExft4KXBUM6dfMWVu4oBWPL4kCuHqtupzYmlnoGHheq2xbaoqAVQAEJs3ulmKbXxoqzIua5J0A1qo60UYQrLqjlVOV1qLXMcpJtshcGeDb9myZAttamNmFM5AMLZProMY8A3yO/V3aQtCoBzl4xdtlCEQpzlBJOr85lbGTyEh63NqEyW980D65AJHXuwrjJq9UJ8jNcX8VIyC9U6kiQsVwZAZFr9Q6h0E5z/l283yk3vdNTOJu6WR3Hsu7YCKU2+T7QcP31Qdc8bCwbOOF5UqCDcvDn1P+ip5o9j+sGv/u3k6bzIQWo8QKJOaoBiTKzhnSUfJhLuPWPNFylx69TgDaCd20ejwm4DSre+WSitPhS86tdCN2zo/6YupDArvzvwC4Ll9PeVNz9a8wE2kTOfcPd8pkb8rNRSiDyPTYnZ/iYlQre4z/w+NNH7ZVaVzCytsinWQer0jnSV1ogxm8ZTWnkLckt/demAOUzT/y6dhjrjcaxhcpm84WohCHxcMWudSDzsuS/qDxXevjLKp2YP/QzmW8quGu75iHYkq1pgkYRyJ4Q== alex@Alexs-MacBook-Pro.local"
 }
@@ -82,7 +84,7 @@ module "wg" {
   wg_private_key = wireguard_asymmetric_key.wg_key_pair.private_key
   wg_public_key  = wireguard_asymmetric_key.wg_key_pair.public_key
   aws_region     = "eu-central-1"
-  key_name       = module.key_pair.this_key_pair_key_name
+  key_name       = module.key_pair.key_pair_key_name
 
   wg_peers = {
     yurii = {
@@ -121,4 +123,3 @@ resource "null_resource" "remote_exec" {
     module.wg
   ]
 }
-
