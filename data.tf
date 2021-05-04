@@ -13,3 +13,7 @@ data "aws_ami" "ami" {
 
   owners = [var.ami_owner]
 }
+
+data "aws_subnet" "this" {
+  id = var.subnet_id
+}

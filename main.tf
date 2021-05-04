@@ -1,20 +1,41 @@
+/*
+ * This is the main code to deploy Wireguard VPN Server on top of AWS Amazon EC2, which includes
+ * (subnets, ASG, ENI, EIP, launch template, and many more).
+ *
+ * Please check folder example/ to see how this module can be provisioned
+ *
+ * Please, find deployment instruction in README.md file of repository root.
+*/
+
+#############################
+# Random pet name generator #
+#############################
 resource "random_pet" "this" {
   keepers = {
     wg_private_key = var.wg_private_key
   }
 }
 
+#######################
+# ENI                 #
+#######################
 resource "aws_network_interface" "this" {
   subnet_id         = var.subnet_id
   security_groups   = var.vpc_security_group_ids
   source_dest_check = false
 }
 
+#######################
+# Elastic IP          #
+#######################
 resource "aws_eip" "this" {
   vpc               = true
   network_interface = aws_network_interface.this.id
 }
 
+#######################
+# Launch template     #
+#######################
 resource "aws_launch_template" "launch_template" {
   name_prefix = local.name
 
@@ -54,6 +75,9 @@ resource "aws_launch_template" "launch_template" {
   }
 }
 
+######################
+# Autoscaling group  #
+######################
 resource "aws_autoscaling_group" "this" {
   min_size         = 1
   max_size         = 1
@@ -68,10 +92,5 @@ resource "aws_autoscaling_group" "this" {
     create_before_destroy = true
   }
 
-  # https://github.com/hashicorp/terraform-provider-aws/pull/7615
   availability_zones = [data.aws_subnet.this.availability_zone]
-}
-
-data "aws_subnet" "this" {
-  id = var.subnet_id
 }
