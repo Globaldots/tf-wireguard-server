@@ -20,3 +20,23 @@ resource "aws_ssm_parameter" "this" {
     }
   )
 }
+
+///*
+//resource "aws_s3_bucket" "b" {
+//  bucket = "my-tf-test-bucket"
+//  acl    = "private"
+//
+//  tags = {
+//    Name        = "My bucket"
+//    Environment = "Dev"
+//  }
+//}
+//
+//resource "aws_s3_bucket_object" "examplebucket_object" {
+//  key                    = "someobject"
+//  bucket                 = aws_s3_bucket.examplebucket.id
+//  source                 = "index.html"
+//  server_side_encryption = "aws:kms"
+//}
+//
+//*/
