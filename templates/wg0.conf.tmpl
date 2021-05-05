@@ -10,7 +10,7 @@ ListenPort = ${listen_port}
 
 #TODO: get rid of hardcode for interface name
 
-PreUp = aws s3 cp ${s3_bucket_name}/wg0.conf  /etc/wireguard/ --region ${region}
+PreUp = aws s3 cp s3://${s3_bucket_name}/wg0.conf  /etc/wireguard/ --region ${region}
 PostUp = iptables -t nat -A POSTROUTING -s ${cidr} -o ens5 -j MASQUERADE
 PostDown = iptables -t nat -D POSTROUTING -s ${cidr} -o ens5 -j MASQUERADE
 

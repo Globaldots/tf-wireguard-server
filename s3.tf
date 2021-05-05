@@ -74,7 +74,7 @@ resource "aws_s3_bucket_object" "main" {
   key    = "wg0.conf"
   content = templatefile("${path.module}/templates/wg0.conf.tmpl", {
     name           = "${local.wg_server_name}"
-    address        = cidrhost("${var.wg_cidr}", 1)
+    address        = "${cidrhost("${var.wg_cidr}", 1)}/${replace(var.wg_cidr, "/.*\\//", "")}"
     listen_port    = "${var.wg_listen_port}"
     s3_bucket_name = "${aws_s3_bucket.main.id}"
     region         = "${aws_s3_bucket.main.region}"
