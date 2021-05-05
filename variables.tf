@@ -1,10 +1,12 @@
 variable "ami_name_filter" {
   type        = string
   description = "Name filter to use in data.aws_ami"
-  default     = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
+  #TODO: should we lock AMI version?
+  default = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
 }
 
 variable "ami_owner" {
+  type        = string
   default     = "099720109477" # Canonical
   description = "AMI owner AWS account ID"
 }

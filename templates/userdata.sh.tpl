@@ -31,7 +31,7 @@ EOF
 
 # Get configuration file from S3
 function get_config_from_s3() {
-   aws s3 cp ${s3_bucket_name}/wg0.conf  /etc/wireguard/ --region ${region}
+   aws s3 cp s3://${s3_bucket_name}/wg0.conf  /etc/wireguard/ --region ${region}
 }
 
 # Enable Wireguard

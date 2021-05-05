@@ -58,7 +58,7 @@ resource "aws_launch_template" "main" {
 
     tags = merge(
       {
-        Name = "${local.wg_server_name}"
+        Name = local.wg_server_name
       },
       var.tags
     )
@@ -89,7 +89,7 @@ resource "aws_autoscaling_group" "main" {
   availability_zones = [data.aws_subnet.main.availability_zone]
 
   dynamic "tag" {
-    for_each = merge(var.tags, { "wireguard-server-name" : "${local.wg_server_name}" })
+    for_each = merge(var.tags, { "wireguard-server-name" : local.wg_server_name })
     content {
       key                 = tag.key
       value               = tag.value
