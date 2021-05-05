@@ -67,7 +67,7 @@ resource "aws_s3_bucket_notification" "main" {
 }
 
 ############################################################
-# Upload Wireguard configuration from template #
+# Upload Wireguard configuration from template             #
 ############################################################
 resource "aws_s3_bucket_object" "main" {
   bucket = aws_s3_bucket.main.id

@@ -29,11 +29,6 @@ root soft nofile 64000
 EOF
 }
 
-# Get configuration file from S3
-function get_config_from_s3() {
-   aws s3 cp s3://${s3_bucket_name}/wg0.conf  /etc/wireguard/ --region ${region}
-}
-
 # Enable Wireguard
 function enable_wireguard_service() {
   wg-quick up wg0
@@ -53,7 +48,6 @@ trap clean_up SIGINT SIGTERM EXIT
 function main() {
   install_packages
   tune_kernel_parameters
-  get_config_from_s3
   enable_wireguard_service
 }
 
