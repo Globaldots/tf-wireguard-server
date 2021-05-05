@@ -1,84 +1,82 @@
-variable "aws_region" {
-  type    = string
-  default = "us-east-1"
-}
-
-variable "ssm_parameter" {
-  type    = string
-  default = ""
-}
-
-variable "name_prefix" {
-  type    = string
-  default = "wireguard-server"
-}
-
 variable "ami_name_filter" {
   type        = string
-  description = "The name filter to use in data.aws_ami"
+  description = "Name filter to use in data.aws_ami"
   default     = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
 }
 
 variable "ami_owner" {
   default     = "099720109477" # Canonical
-  description = "The AWS account ID of the AMI owner"
+  description = "AMI owner AWS account ID"
 }
 
-variable "instance_type" {
-  type    = string
-  default = "t3a.micro"
+variable "ec2_instance_type" {
+  type        = string
+  description = "EC2 instance type"
+  default     = "t3a.micro"
 }
 
-variable "subnet_id" {
-  type = string
+variable "vpc_id" {
+  type        = string
+  description = "AWS VPC ID"
 }
 
-variable "vpc_security_group_ids" {
-  type = list(string)
+variable "subnet_cidr" {
+  type        = string
+  description = "VPC subnet CIDR to create resources in"
+}
+
+variable "security_group_ids" {
+  type        = list(string)
+  description = "VPC (EC2) security group IDs"
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  type        = map(string)
+  description = "Tags to assign to all resources"
+  default     = {}
 }
 
-variable "ssm_secret_prefix" {
-  default = ""
-}
-
-variable "key_name" {
-  default = ""
-}
-
-variable "wg_address" {
-  default = "10.0.44.1/24"
+variable "ssh_keypair_name" {
+  type        = string
+  description = "EC2 SSH keypair name"
 }
 
 variable "wg_cidr" {
-  default = "10.0.44.0/24"
-}
-
-variable "dns_server" {
-  default = "1.1.1.1"
+  type        = string
+  description = "Wireguard network subnet CIDR"
+  default     = "10.0.44.0/24"
 }
 
 variable "wg_listen_port" {
-  default = "51820"
+  type        = string
+  description = "Wireguard listen port"
+  default     = "51820"
 }
 
 variable "wg_private_key" {
   type        = string
-  description = "WireGuard Server Private Key"
+  description = "WireGuard server private Key"
   sensitive   = true
 }
 
-variable "wg_public_key" {
+variable "wg_dns_server" {
   type        = string
-  description = "WireGuard Server Public Key"
-  sensitive   = true
+  description = "DNS server for Wireguard network"
+  default     = "8.8.8.8"
 }
 
 variable "wg_peers" {
-  type    = map(object({ public_key = string, allowed_ips = string }))
-  default = {}
+  type        = map(object({ public_key = string, allowed_ips = string }))
+  description = "Wireguard clients (peers) configuration"
+  default     = {}
+}
+
+variable "name_suffix" {
+  type        = string
+  description = "Suffix to be added to all resources"
+}
+
+variable "s3_bucket_name_prefix" {
+  type        = string
+  description = "Prefix to be added to S3 bucket name"
 }

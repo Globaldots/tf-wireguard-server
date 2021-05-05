@@ -1,11 +1,98 @@
-output "wireguard_server_endpoint" {
-  value = module.wg.wireguard_server_endpoint
-}
-
 output "wireguard_keys" {
+  description = "Wireguard public & private keys"
   value = {
     private = wireguard_asymmetric_key.wg_key_pair.private_key
     public  = wireguard_asymmetric_key.wg_key_pair.public_key
   }
   sensitive = true
+}
+
+output "wireguard_server_name" {
+  description = "Wireguard server name"
+  value       = module.wg.wireguard_server_name
+}
+
+output "wireguard_server_ip" {
+  description = "Wireguard server IP-address"
+  value       = module.wg.wireguard_server_ip
+}
+
+output "wireguard_server_port" {
+  description = "Wireguard server port"
+  value       = module.wg.wireguard_server_port
+}
+
+output "wireguard_server_endpoint" {
+  description = "Wireguard server endpoint"
+  value       = module.wg.wireguard_server_endpoint
+}
+
+output "launch_template_arn" {
+  description = "EC2 launch template ARN"
+  value       = module.wg.launch_template_arn
+}
+
+output "launch_template_id" {
+  description = "EC2 launch template ID"
+  value       = module.wg.launch_template_id
+}
+
+output "autoscaling_group_arn" {
+  description = "EC2 autoscaling group ARN"
+  value       = module.wg.autoscaling_group_arn
+}
+
+output "autoscaling_group_name" {
+  description = "EC2 autoscaling group name"
+  value       = module.wg.autoscaling_group_name
+}
+
+output "sqs_queue_arn" {
+  description = "SQS queue for S3 notifications ARN"
+  value       = module.wg.sqs_queue_arn
+}
+
+output "sqs_queue_id" {
+  description = "SQS queue for S3 notifications ID"
+  value       = module.wg.sqs_queue_id
+}
+
+output "sqs_queue_dead_letter_arn" {
+  description = "SQS dead letter queue for S3 notifications ARN"
+  value       = module.wg.sqs_queue_dead_letter_arn
+}
+
+output "sqs_queue_dead_letter_id" {
+  description = "SQS dead letter queue for S3 notifications ID"
+  value       = module.wg.sqs_queue_dead_letter_id
+}
+
+output "s3_bucket_arn" {
+  description = "Wireguard configuration S3 bucket ARN"
+  value       = module.wg.s3_bucket_arn
+}
+
+output "s3_bucket_name" {
+  description = "Wireguard configuration S3 bucket name"
+  value       = module.wg.s3_bucket_name
+}
+
+output "iam_role_arn" {
+  description = "ARN of IAM role to access S3 bucket"
+  value       = module.wg.iam_role_arn
+}
+
+output "iam_role_name" {
+  description = "Name of IAM role to access S3 bucket"
+  value       = module.wg.iam_role_name
+}
+
+output "iam_instance_profile_arn" {
+  description = "ARN of IAM instance profile to access S3 bucket"
+  value       = module.wg.iam_instance_profile_arn
+}
+
+output "iam_instance_profile_id" {
+  description = "ID of IAM instance profile to access S3 bucket"
+  value       = module.wg.iam_instance_profile_id
 }

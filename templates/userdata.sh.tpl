@@ -29,15 +29,9 @@ root soft nofile 64000
 EOF
 }
 
-# Get private key from SSM
-function get_private_key_from_ssm_parameter_store() {
-   aws ssm get-parameter \
-    --region ${region} \
-    --name ${ssm_parameter} \
-    --with-decryption \
-    --output json | \
-   jq -r '.Parameter.Value' | \
-   tee /etc/wireguard/wg0.conf &> /dev/null
+# Get configuration file from S3
+function get_config_from_s3() {
+   aws s3 cp ${s3_bucket_name}/wg0.conf  /etc/wireguard/ --region ${region}
 }
 
 # Enable Wireguard
@@ -59,7 +53,7 @@ trap clean_up SIGINT SIGTERM EXIT
 function main() {
   install_packages
   tune_kernel_parameters
-  get_private_key_from_ssm_parameter_store
+  get_config_from_s3
   enable_wireguard_service
 }
 

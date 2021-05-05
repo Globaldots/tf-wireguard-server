@@ -6,11 +6,11 @@ ListenPort = ${listen_port}
 ###  Two rules bellow for bounce server
 # PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
 # PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o ens5 -j MASQUERADE
-###
+### 
 
 #TODO: get rid of hardcode for interface name
 
-PreUp = aws ssm get-parameter --region ${region} --name ${ssm_parameter} --with-decryption --output json | jq -r '.Parameter.Value' | tee /etc/wireguard/wg0.conf &> /dev/null
+PreUp = aws s3 cp ${s3_bucket_name}/wg0.conf  /etc/wireguard/ --region ${region}
 PostUp = iptables -t nat -A POSTROUTING -s ${cidr} -o ens5 -j MASQUERADE
 PostDown = iptables -t nat -D POSTROUTING -s ${cidr} -o ens5 -j MASQUERADE
 

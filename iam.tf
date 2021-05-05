@@ -1,44 +1,56 @@
-module "iam_assumable_role" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
-  version = "3.15.0"
 
-  role_name = local.name
 
-  create_role             = true
-  create_instance_profile = true
+######################################################
+# IAM role & instance profile for S3 access from EC2 #
+######################################################
+resource "aws_iam_role" "main" {
+  name        = "wireguard-configuration--${var.name_suffix}"
+  description = "IAM role to pull Wireguard configuration from ${aws_s3_bucket.main.id} S3 bucket"
+  path        = "/wireguard/"
 
-  role_requires_mfa = false
-
-  trusted_role_services = [
-    "ec2.amazonaws.com"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
   ]
+}
+EOF
 
-  custom_role_policy_arns = [
-    module.iam_policy.arn
-  ]
 
-  number_of_custom_role_policy_arns = 1
+  inline_policy {
+    name = "my_inline_policy"
+
+    policy = jsonencode({
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Effect" : "Allow",
+          "Action" : [
+            "kms:Decrypt",
+            "s3:GetObject"
+          ],
+          "Resource" : [
+            "${data.aws_kms_alias.s3.target_key_arn}",
+            "arn:aws:s3:::${aws_s3_bucket.main.id}/*"
+          ]
+        }
+      ]
+    })
+  }
 
   tags = var.tags
 }
 
-module "iam_policy" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
-  version = "3.15.0"
-
-  name        = local.name
-  description = "IAM policy for wireguard server - ${var.name_prefix}"
-
-  policy = data.aws_iam_policy_document.this.json
-}
-
-data "aws_iam_policy_document" "this" {
-  statement {
-    actions = [
-      "ssm:GetParameter",
-      "ssm:GetParameters",
-      "ssm:GetParametersByPath"
-    ]
-    resources = [aws_ssm_parameter.this.arn]
-  }
+resource "aws_iam_instance_profile" "main" {
+  name = "wireguard-configuration-${var.name_suffix}"
+  role = aws_iam_role.main.name
+  tags = var.tags
 }
