@@ -12,19 +12,19 @@ output "wireguard_server_name" {
   value       = module.wg.wireguard_server_name
 }
 
-output "wireguard_server_ip" {
-  description = "Wireguard server IP-address"
-  value       = module.wg.wireguard_server_ip
+output "wireguard_server_host" {
+  description = "Wireguard server host"
+  value       = module.wg.wireguard_server_host
 }
 
-output "wireguard_server_port" {
-  description = "Wireguard server port"
-  value       = module.wg.wireguard_server_port
+output "wireguard_server_ports" {
+  description = "Wireguard server ports"
+  value       = module.wg.wireguard_server_ports
 }
 
-output "wireguard_server_endpoint" {
-  description = "Wireguard server endpoint"
-  value       = module.wg.wireguard_server_endpoint
+output "wireguard_server_endpoints" {
+  description = "Wireguard server endpoints"
+  value       = module.wg.wireguard_server_endpoints
 }
 
 output "launch_template_arn" {
@@ -75,6 +75,26 @@ output "s3_bucket_arn" {
 output "s3_bucket_name" {
   description = "Wireguard configuration S3 bucket name"
   value       = module.wg.s3_bucket_name
+}
+
+output "s3_bucket_access_logs_arn" {
+  description = "Load balancer access logs S3 bucket ARN"
+  value       = module.wg.s3_bucket_access_logs_arn
+}
+
+output "s3_bucket_access_logs_name" {
+  description = "Load balancer access logs S3 bucket name"
+  value       = module.wg.s3_bucket_access_logs_name
+}
+
+output "lb_arn" {
+  description = "Load balancer ARN"
+  value       = module.wg.lb_arn
+}
+
+output "lb_dns_name" {
+  description = "Load balancer DNS name"
+  value       = module.wg.lb_dns_name
 }
 
 output "iam_role_arn" {

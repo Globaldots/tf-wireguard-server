@@ -9,4 +9,7 @@ locals {
       }
     )
   )
+  ec2_iam_policy_names = concat(var.ec2_iam_policy_names, [
+    "CloudWatchAgentServerPolicy", "AmazonSSMManagedInstanceCore", "AmazonSSMDirectoryServiceAccess"
+  ])
 }

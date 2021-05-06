@@ -3,19 +3,19 @@ output "wireguard_server_name" {
   value       = local.wg_server_name
 }
 
-output "wireguard_server_ip" {
-  description = "Wireguard server IP-address"
-  value       = aws_eip.main.public_ip
+output "wireguard_server_host" {
+  description = "Wireguard server host"
+  value       = aws_route53_record.main.fqdn
 }
 
-output "wireguard_server_port" {
-  description = "Wireguard server port"
-  value       = var.wg_listen_port
+output "wireguard_server_ports" {
+  description = "Wireguard server ports"
+  value       = var.wg_listen_ports
 }
 
-output "wireguard_server_endpoint" {
-  description = "Wireguard server endpoint"
-  value       = format("%s:%s", aws_eip.main.public_ip, var.wg_listen_port)
+output "wireguard_server_endpoints" {
+  description = "Wireguard server endpoints"
+  value       = [for port in var.wg_listen_ports : format("%s:%s", aws_route53_record.main.fqdn, port)]
 }
 
 output "launch_template_arn" {
@@ -66,6 +66,26 @@ output "s3_bucket_arn" {
 output "s3_bucket_name" {
   description = "Wireguard configuration S3 bucket name"
   value       = aws_s3_bucket.main.id
+}
+
+output "s3_bucket_access_logs_arn" {
+  description = "Load balancer access logs S3 bucket ARN"
+  value       = aws_s3_bucket.access_logs.arn
+}
+
+output "s3_bucket_access_logs_name" {
+  description = "Load balancer access logs S3 bucket name"
+  value       = aws_s3_bucket.access_logs.id
+}
+
+output "lb_arn" {
+  description = "Load balancer ARN"
+  value       = aws_lb.main.arn
+}
+
+output "lb_dns_name" {
+  description = "Load balancer DNS name"
+  value       = aws_lb.main.dns_name
 }
 
 output "iam_role_arn" {

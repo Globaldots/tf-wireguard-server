@@ -23,43 +23,6 @@ module "vpc" {
   tags = var.tags
 }
 
-# Create a security group
-module "sg" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "3.18.0"
-
-  name        = "WireGuard-${random_pet.main.id}"
-  description = "Security group for WireGuard (${random_pet.main.id})"
-  vpc_id      = module.vpc.vpc_id
-
-  ingress_with_cidr_blocks = [
-    {
-      from_port   = var.wg_listen_port
-      to_port     = var.wg_listen_port
-      protocol    = "udp"
-      description = "WireGuard"
-      cidr_blocks = "0.0.0.0/0"
-    },
-    {
-      from_port   = 22
-      to_port     = 22
-      protocol    = "tcp"
-      description = "ssh"
-      cidr_blocks = "0.0.0.0/0"
-    },
-  ]
-
-  egress_with_cidr_blocks = [
-    {
-      from_port   = 0
-      to_port     = 65535
-      cidr_blocks = "0.0.0.0/0"
-      protocol    = "-1"
-    }
-  ]
-  tags = var.tags
-}
-
 # Add your key for SSH access to VM
 module "key_pair" {
   source  = "terraform-aws-modules/key-pair/aws"
@@ -74,14 +37,15 @@ module "key_pair" {
 module "wg" {
   source = "../"
 
-  vpc_id                = module.vpc.vpc_id
-  subnet_cidr           = module.vpc.private_subnets_cidr_blocks[0]
-  security_group_ids    = [module.sg.this_security_group_id]
-  ssh_keypair_name      = module.key_pair.key_pair_key_name
-  name_suffix           = random_pet.main.id
-  s3_bucket_name_prefix = var.s3_bucket_name_prefix
-  wg_private_key        = wireguard_asymmetric_key.wg_key_pair.private_key
-  wg_listen_port        = var.wg_listen_port
+  vpc_id                            = module.vpc.vpc_id
+  subnet_cidrs                      = module.vpc.private_subnets_cidr_blocks
+  ssh_keypair_name                  = module.key_pair.key_pair_key_name
+  name_suffix                       = random_pet.main.id
+  s3_bucket_name_prefix             = var.s3_bucket_name_prefix
+  wg_private_key                    = wireguard_asymmetric_key.wg_key_pair.private_key
+  wg_listen_ports                   = var.wg_listen_ports
+  wg_allow_connections_from_subnets = var.wg_allow_connections_from_subnets
+  dns_zone_name                     = var.dns_zone_name
 
   wg_peers = {
     yurii = {

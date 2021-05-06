@@ -18,7 +18,8 @@ data "aws_ami" "ami" {
 }
 
 data "aws_subnet" "main" {
-  cidr_block = var.subnet_cidr
+  count      = length(var.subnet_cidrs)
+  cidr_block = var.subnet_cidrs[count.index]
   vpc_id     = var.vpc_id
 }
 
@@ -29,3 +30,13 @@ data "aws_kms_alias" "s3" {
 data "aws_kms_alias" "sqs" {
   name = "alias/aws/sqs"
 }
+
+data "aws_vpc" "main" {
+  id = var.vpc_id
+}
+
+data "aws_route53_zone" "main" {
+  name = "${replace(var.dns_zone_name, "/\\.$/", "")}."
+}
+
+data "aws_elb_service_account" "main" {}

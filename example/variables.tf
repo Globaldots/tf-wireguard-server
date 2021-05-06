@@ -8,6 +8,12 @@ variable "vpc_availability_zones" {
   description = "VPC availability zones"
 }
 
+variable "wg_listen_ports" {
+  type        = list(string)
+  description = "Wireguard listen ports"
+  default     = ["51820", "4500", "53"]
+}
+
 variable "vpc_private_subnets" {
   type        = list(string)
   description = "VPC private subnet CIDRs"
@@ -16,11 +22,6 @@ variable "vpc_private_subnets" {
 variable "vpc_public_subnets" {
   type        = list(string)
   description = "VPC public subnet CIDRs"
-}
-
-variable "wg_listen_port" {
-  type        = string
-  description = "Wireguard listen port"
 }
 
 variable "ec2_ssh_public_key" {
@@ -39,5 +40,17 @@ variable "tags" {
   default     = {}
 }
 
+variable "enable_termination_protection" {
+  type        = bool
+  description = "Enable termination protection for resources"
+}
 
+variable "wg_allow_connections_from_subnets" {
+  type        = list(string)
+  description = "Restrict Wireguard server availability to defined subnets"
+}
 
+variable "dns_zone_name" {
+  type        = string
+  description = "Route53 DNS zone name for Wireguard server endpoint"
+}
