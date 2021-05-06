@@ -1,0 +1,4 @@
+diagrams==0.19.1
+graphviz==0.16
+Jinja2==2.11.3
+MarkupSafe==1.1.1
