@@ -26,6 +26,14 @@ resource "aws_lb_target_group" "main" {
   vpc_id   = var.vpc_id
   tags     = var.tags
 
+  health_check {
+    protocol            = "TCP"
+    port                = 22
+    interval            = 30
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+  }
+
   stickiness {
     enabled = true
     type    = "source_ip"

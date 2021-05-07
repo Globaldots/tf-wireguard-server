@@ -48,29 +48,3 @@ module "wg" {
   wg_peers                          = var.wg_peers
   tags                              = var.tags
 }
-
-# Remote Wireguard restart (less recommended way)
-# resource "null_resource" "remote_exec" {
-
-#   triggers = {
-#     key = "${uuid()}"
-#   }
-
-#   provisioner "remote-exec" {
-#     connection {
-#       type        = "ssh"
-#       user        = var.username
-#       host        = module.wg.wireguard_server_ip
-#       private_key = file("~/.ssh/id_rsa")
-#     }
-
-#     inline = [
-#       "sudo wg-quick down substr("wg-${random_pet.main.id}", 0, 15)",
-#       "sudo wg-quick up substr("wg-${random_pet.main.id}", 0, 15)"
-#     ]
-#   }
-
-#   depends_on = [
-#     module.wg
-#   ]
-# }
