@@ -20,4 +20,11 @@ Backend control Wireguard configuration and update it based on events from SNS
 
 Wireguard configuration stored in S3 storage
 
+With SNS:
+
 [![TF WIREGUARD SERVER](aws-ec2-wireguard_app.png)](aws-ec2-wireguard_app.png)
+
+
+With SQS:
+
+[![TF WIREGUARD SERVER](aws-ec2-wireguard_app_sqs.png)](aws-ec2-wireguard_app_sqs.png)
