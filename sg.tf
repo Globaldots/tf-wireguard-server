@@ -15,7 +15,7 @@ resource "aws_security_group_rule" "instance-ingress-1" {
   type              = "ingress"
   from_port         = var.wg_listen_ports[count.index]
   to_port           = var.wg_listen_ports[count.index]
-  cidr_blocks       = var.wg_allow_connections_from_subnets
+  cidr_blocks       = [data.aws_vpc.main.cidr_block]
   protocol          = "udp"
   security_group_id = aws_security_group.instance.id
 }
@@ -34,6 +34,6 @@ resource "aws_security_group_rule" "instance-egress-1" {
   from_port         = 0
   to_port           = 0
   cidr_blocks       = ["0.0.0.0/0"]
-  protocol          = "all"
+  protocol          = "-1"
   security_group_id = aws_security_group.instance.id
 }
