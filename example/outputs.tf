@@ -27,6 +27,11 @@ output "wireguard_server_endpoints" {
   value       = module.wg.wireguard_server_endpoints
 }
 
+output "wireguard_client_configs" {
+  description = "Example configuration files for Wireguard clients"
+  value       = module.wg.wireguard_client_configs
+}
+
 output "launch_template_arn" {
   description = "EC2 launch template ARN"
   value       = module.wg.launch_template_arn

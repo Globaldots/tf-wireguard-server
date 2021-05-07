@@ -24,10 +24,7 @@ module "vpc" {
 }
 
 # Add your key for SSH access to VM
-module "key_pair" {
-  source  = "terraform-aws-modules/key-pair/aws"
-  version = "1.0.0"
-
+resource "aws_key_pair" "main" {
   key_name   = "deployer-one-${random_pet.main.id}"
   public_key = var.ec2_ssh_public_key
   tags       = var.tags
@@ -37,27 +34,19 @@ module "key_pair" {
 module "wg" {
   source = "../"
 
-  vpc_id                            = module.vpc.vpc_id
-  subnet_cidrs                      = module.vpc.private_subnets_cidr_blocks
-  ssh_keypair_name                  = module.key_pair.key_pair_key_name
+  vpc_id = module.vpc.vpc_id
+  # TODO: swap this later, public subnet is needed for debuging purpose only
+  # subnet_cidrs                      = module.vpc.private_subnets_cidr_blocks
+  subnet_cidrs                      = module.vpc.public_subnets_cidr_blocks
+  ssh_keypair_name                  = aws_key_pair.main.key_name
   name_suffix                       = random_pet.main.id
   s3_bucket_name_prefix             = var.s3_bucket_name_prefix
   wg_private_key                    = wireguard_asymmetric_key.wg_key_pair.private_key
   wg_listen_ports                   = var.wg_listen_ports
   wg_allow_connections_from_subnets = var.wg_allow_connections_from_subnets
   dns_zone_name                     = var.dns_zone_name
-
-  wg_peers = {
-    yurii = {
-      public_key  = "dRWcZBv2++23GZ0DdoFLrXvGch4lcZ2Fj7yeaSAUB2I="
-      allowed_ips = "10.0.44.2/32"
-    }
-    alex = {
-      public_key  = "D9HA+Qhe/kR0nwVxId2vNSuP0SozOh3umC5PKvL3b1Y="
-      allowed_ips = "10.0.44.3/32"
-    }
-  }
-  tags = var.tags
+  wg_peers                          = var.wg_peers
+  tags                              = var.tags
 }
 
 # Remote Wireguard restart (less recommended way)
@@ -76,8 +65,8 @@ module "wg" {
 #     }
 
 #     inline = [
-#       "sudo wg-quick down wg0",
-#       "sudo wg-quick up wg0"
+#       "sudo wg-quick down substr("wg-${random_pet.main.id}", 0, 15)",
+#       "sudo wg-quick up substr("wg-${random_pet.main.id}", 0, 15)"
 #     ]
 #   }
 

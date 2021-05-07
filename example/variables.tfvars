@@ -5,7 +5,7 @@ vpc_availability_zones = [
   ]
 vpc_private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
 vpc_public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
-ec2_ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDyQd3GtSqa9baNUZyrTN8pWBxV5wHEUoHxeE1z5Yi66szMbT1tRjt/vOMLpHFzyb3Zbn0mdDGvcyrJocS0lP00ZQKTJi5e5WnVPaeGKU9nAy09aV33NsmuIi3y4jNExft4KXBUM6dfMWVu4oBWPL4kCuHqtupzYmlnoGHheq2xbaoqAVQAEJs3ulmKbXxoqzIua5J0A1qo60UYQrLqjlVOV1qLXMcpJtshcGeDb9myZAttamNmFM5AMLZProMY8A3yO/V3aQtCoBzl4xdtlCEQpzlBJOr85lbGTyEh63NqEyW980D65AJHXuwrjJq9UJ8jNcX8VIyC9U6kiQsVwZAZFr9Q6h0E5z/l283yk3vdNTOJu6WR3Hsu7YCKU2+T7QcP31Qdc8bCwbOOF5UqCDcvDn1P+ip5o9j+sGv/u3k6bzIQWo8QKJOaoBiTKzhnSUfJhLuPWPNFylx69TgDaCd20ejwm4DSre+WSitPhS86tdCN2zo/6YupDArvzvwC4Ll9PeVNz9a8wE2kTOfcPd8pkb8rNRSiDyPTYnZ/iYlQre4z/w+NNH7ZVaVzCytsinWQer0jnSV1ogxm8ZTWnkLckt/demAOUzT/y6dhjrjcaxhcpm84WohCHxcMWudSDzsuS/qDxXevjLKp2YP/QzmW8quGu75iHYkq1pgkYRyJ4Q== demo@key"
+ec2_ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBjZ/tOu3UdUT3Q8jDAivKM+tW0PnHH5Jc+8NedDk7cTZzfIPZMLxf4iF633HFwjwBmadNDmcoAaGhu8s+WjFIUiWcq9vvHmS/DXexEeoRthEXjFgl6x2vNg+yGADdDKg0cdeMMBqVxqKbFpiaj+Bhkup0WSQ+vKkwhkknxwTFV8ixLWer1liE1jDhmnjgg+bz0FMfh1U0qmLcL9Khktu7P4D1Zz9+0aOAx1UigXvvlQ+k4WF5GMG4UTSKw2J0i8Ayzojm7ZwVZ0Km/iTg19emPtBizOFxcx7OvqSnz4ZIKeoss5Bimd2vVOvZqwJEC2LCVJbdAIwxxQTkWk2i5mduKBnZ+ukuf7ov8Vt5rVkOmkZJvStGSDZmVwRghvzSrS9Cp8bLeiLFwIr7u5QmxyFn8hdMgiNoKUFXJKopLYRLN/X4qGa03ogLeQVFwLmP9GnjFI3WOAAr8MW02SKb82cqzXLNPeZBIEAkSPGHLesczzFkyHSG/xAkStzXsnQfGy8= demo@key"
 s3_bucket_name_prefix = "gd"
 tags = {
   Managed-by = "Terraform"
@@ -13,3 +13,17 @@ tags = {
 enable_termination_protection = false
 wg_allow_connections_from_subnets = ["0.0.0.0/0"]
 dns_zone_name = "egorzp.info"
+wg_peers = {
+    yurii = {
+      public_key  = "dRWcZBv2++23GZ0DdoFLrXvGch4lcZ2Fj7yeaSAUB2I="
+      allowed_ips = "10.0.44.2/24"
+    }
+    alex = {
+      public_key  = "D9HA+Qhe/kR0nwVxId2vNSuP0SozOh3umC5PKvL3b1Y="
+      allowed_ips = "10.0.44.3/24"
+    }
+    roman = {
+      public_key = "U/2FptGTCVaY3laN49blUv1zf8KcD8oVALzQ0j/HSzY="
+      allowed_ips = "10.0.44.4/24"
+    }
+}

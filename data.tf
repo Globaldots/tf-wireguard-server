@@ -1,12 +1,23 @@
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
+data "aws_elb_service_account" "main" {}
 
 data "aws_ami" "ami" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = [var.ami_name_filter]
+    values = ["amzn2-ami-hvm-2.*"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
   }
 
   filter {
@@ -14,7 +25,7 @@ data "aws_ami" "ami" {
     values = ["hvm"]
   }
 
-  owners = [var.ami_owner]
+  owners = ["amazon"]
 }
 
 data "aws_subnet" "main" {
@@ -39,4 +50,3 @@ data "aws_route53_zone" "main" {
   name = "${replace(var.dns_zone_name, "/\\.$/", "")}."
 }
 
-data "aws_elb_service_account" "main" {}

@@ -155,8 +155,8 @@ resource "aws_s3_bucket_notification" "main" {
 ################################################
 resource "aws_s3_bucket_object" "main" {
   bucket = aws_s3_bucket.main.id
-  key    = "wg0.conf"
-  content = templatefile("${path.module}/templates/wg0.conf.tmpl", {
+  key    = "${local.wg_interface_name}.conf"
+  content = templatefile("${path.module}/templates/wg0.conf.tpl", {
     name           = local.wg_server_name
     address        = "${cidrhost(var.wg_cidr, 1)}/${replace(var.wg_cidr, "/.*\\//", "")}"
     s3_bucket_name = aws_s3_bucket.main.id
@@ -166,6 +166,7 @@ resource "aws_s3_bucket_object" "main" {
     dns_server     = var.wg_dns_server
     peers          = var.wg_peers
     mtu            = var.wg_mtu
+    interface_name = local.wg_interface_name
   })
   tags = var.tags
 }

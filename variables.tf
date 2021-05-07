@@ -1,16 +1,3 @@
-variable "ami_name_filter" {
-  type        = string
-  description = "Name filter to use in data.aws_ami"
-  #TODO: should we lock AMI version?
-  default = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
-}
-
-variable "ami_owner" {
-  type        = string
-  default     = "099720109477" # Canonical
-  description = "AMI owner AWS account ID"
-}
-
 variable "ec2_instance_type" {
   type        = string
   description = "EC2 instance type"

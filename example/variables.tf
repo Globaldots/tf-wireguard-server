@@ -14,6 +14,11 @@ variable "wg_listen_ports" {
   default     = ["51820", "4500", "53"]
 }
 
+variable "wg_peers" {
+  type        = map(object({ public_key = string, allowed_ips = string }))
+  description = "Wireguard clients (peers) configuration"
+}
+
 variable "vpc_private_subnets" {
   type        = list(string)
   description = "VPC private subnet CIDRs"

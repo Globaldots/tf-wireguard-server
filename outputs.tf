@@ -18,6 +18,11 @@ output "wireguard_server_endpoints" {
   value       = [for port in var.wg_listen_ports : format("%s:%s", aws_route53_record.main.fqdn, port)]
 }
 
+output "wireguard_client_configs" {
+  description = "Example configuration files for Wireguard clients"
+  value       = local.wireguard_client_configs
+}
+
 output "launch_template_arn" {
   description = "EC2 launch template ARN"
   value       = aws_launch_template.main.arn

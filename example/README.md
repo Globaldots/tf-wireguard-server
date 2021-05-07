@@ -20,6 +20,7 @@
 | vpc\_private\_subnets | VPC private subnet CIDRs | `list(string)` | n/a | yes |
 | vpc\_public\_subnets | VPC public subnet CIDRs | `list(string)` | n/a | yes |
 | wg\_allow\_connections\_from\_subnets | Restrict Wireguard server availability to defined subnets | `list(string)` | n/a | yes |
+| wg\_peers | Wireguard clients (peers) configuration | `map(object({ public_key = string, allowed_ips = string }))` | n/a | yes |
 | tags | Tags to assign to all resources | `map(string)` | `{}` | no |
 | wg\_listen\_ports | Wireguard listen ports | `list(string)` | <pre>[<br>  "51820",<br>  "4500",<br>  "53"<br>]</pre> | no |
 
@@ -45,6 +46,7 @@
 | sqs\_queue\_dead\_letter\_arn | SQS dead letter queue for S3 notifications ARN |
 | sqs\_queue\_dead\_letter\_id | SQS dead letter queue for S3 notifications ID |
 | sqs\_queue\_id | SQS queue for S3 notifications ID |
+| wireguard\_client\_configs | Example configuration files for Wireguard clients |
 | wireguard\_keys | Wireguard public & private keys |
 | wireguard\_server\_endpoints | Wireguard server endpoints |
 | wireguard\_server\_host | Wireguard server host |

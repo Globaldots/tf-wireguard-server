@@ -23,7 +23,7 @@ resource "aws_iam_role" "main" {
 EOF
 
   inline_policy {
-    name = "my_inline_policy"
+    name = "AllowS3GetObject"
 
     policy = jsonencode({
       "Version" : "2012-10-17",
@@ -47,9 +47,9 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "main" {
-  count      = length(var.ec2_iam_policy_names)
+  count      = length(local.ec2_iam_policy_names)
   role       = aws_iam_role.main.name
-  policy_arn = "arn:aws:iam::aws:policy/${var.ec2_iam_policy_names[count.index]}"
+  policy_arn = "arn:aws:iam::aws:policy/${local.ec2_iam_policy_names[count.index]}"
 }
 
 resource "aws_iam_instance_profile" "main" {
