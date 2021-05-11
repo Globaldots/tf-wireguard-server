@@ -4,7 +4,7 @@ from diagrams.aws.compute import EC2ElasticIpAddress, EC2AutoScaling, EC2
 from diagrams.aws.network import NLB, Route53
 from diagrams.onprem.iac import Terraform
 from diagrams.onprem.client import Users
-from diagrams.aws.storage import S3
+from diagrams.aws.storage import S3, SimpleStorageServiceS3Object
 from diagrams.aws.integration import SNS, SimpleNotificationServiceSnsTopic, SQS, SimpleQueueServiceSqsQueue
 from diagrams.programming.language import Python
 from diagrams.custom import Custom
@@ -28,6 +28,7 @@ with Diagram("aws-ec2-wireguard infra", show=False, direction="LR", graph_attr=g
         nlb = NLB("NLB \nHTTPS Listener & termination\nUDP Listener \n")
         acm = ACM("Certificate Manager \nACM")
         config = S3("S3")
+        static_config = SimpleStorageServiceS3Object("server config: \n[Interface] \n...")
         sns = SNS("SNS")
 
         with Cluster("ec2_as_web", graph_attr={"label":"EC2 autoscaling group"}):
@@ -51,7 +52,7 @@ with Diagram("aws-ec2-wireguard infra", show=False, direction="LR", graph_attr=g
         dns >> nlb >> Edge(label="UDP", lhead="cluster_ec2_as") >> wg[1]
         dns >> Edge(label="DNS validation") >> acm >> Edge(label="SSL certificate") >> nlb
         nlb >> Edge(label="HTTP") >> front_app >> Edge(lhead="cluster_ec2_as") >> wg[0]
-        wg[1] << Edge(label="config", ltail="cluster_ec2_as") << config
+        wg[1] << Edge(label="config", ltail="cluster_ec2_as") << config << static_config
         wg[0] << Edge(label="events", ltail="cluster_ec2_as") << sns
 
 
@@ -72,13 +73,6 @@ with Diagram("aws-ec2-wireguard app", show=False, graph_attr=graph_attr):
                 fixedsize="true", width="0.5", height="0.5", )
         wireguard_1 =  Custom("Wireguard", "./wireguard-icon.png")
         backend_app_1 = Python("BackendApp")
-
-    # with Cluster("wgn", graph_attr={"label":"Wireguard instance n"}):
-    #     ec2 = EC2(
-    #             label="", fontsize="8", loc="t",
-    #             fixedsize="true", width="0.5", height="0.5", )
-    #     wireguard_n =  Custom("Wireguard", "./wireguard-icon.png")
-    #     backend_app_n = Python("BackendApp")
 
     with Cluster("ui", graph_attr={"label":"Mgmt App (UI)"}):
         ec2 = EC2(
@@ -101,9 +95,10 @@ with Diagram("aws-ec2-wireguard app", show=False, graph_attr=graph_attr):
     update >> Edge(label="4. sub. \nget event", color="darkorange") >> backend_app_1 \
         >> Edge(label="6. config update&reload", color="darkorange") >> wireguard_1
 
-    # backend_app_n << Edge(label="6. read config") << config 
-    # update >> Edge(label="4. sub. \nget event") >> backend_app_n \
-    #     >> Edge(label="5. config update&reload") >> wireguard_n
+    with Cluster("config", graph_attr={"label":"Wireguard server config"}):
+        static_config = SimpleStorageServiceS3Object("server config: \n[Interface] \n...")
+        dynamic_config = SimpleStorageServiceS3Object("# Peers \n[Peer] \n...")
+    static_config - Edge(ltail="cluster_config")  - config
 
 
 with Diagram("aws-ec2-wireguard app_sqs", show=False, graph_attr=graph_attr):
@@ -147,3 +142,8 @@ with Diagram("aws-ec2-wireguard app_sqs", show=False, graph_attr=graph_attr):
     sqs >> Edge(label="3. create an message", color="darkorange") \
         >> app_1_q >> Edge(label="4. read message", color="darkorange") >> backend_app_1 \
             >> Edge(label="6. config update&reload", color="darkorange") >> wireguard_1
+    
+    with Cluster("config", graph_attr={"label":"Wireguard server config"}):
+        static_config = SimpleStorageServiceS3Object("server config: \n[Interface] \n...")
+        dynamic_config = SimpleStorageServiceS3Object("# Peers \n[Peer] \n...")
+    static_config - Edge(ltail="cluster_config")  - config
