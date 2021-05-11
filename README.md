@@ -26,6 +26,8 @@ Please, find deployment instruction in README.md file of repository root.
 | wg\_allow\_connections\_from\_subnets | Restrict Wireguard server availability to defined subnets | `list(string)` | n/a | yes |
 | wg\_private\_key | WireGuard server private key | `string` | n/a | yes |
 | wg\_public\_key | WireGuard server public key | `string` | n/a | yes |
+| cloudwatch\_alerts\_emails | Email addresses to get monitoring alerts from CloudWatch | `list(string)` | `[]` | no |
+| cloudwatch\_alerts\_phone\_numbers | Phone numbers to get monitoring alerts from CloudWatch | `list(string)` | `[]` | no |
 | ec2\_iam\_policy\_names | Additional IAM policies to assign to EC2 instances through instance profile | `list(string)` | `[]` | no |
 | ec2\_instance\_type | EC2 instance type | `string` | `"t3a.micro"` | no |
 | enable\_termination\_protection | Enable termination protection for resources | `bool` | `true` | no |

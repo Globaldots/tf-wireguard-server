@@ -120,3 +120,15 @@ variable "dns_zone_name" {
   type        = string
   description = "Route53 DNS zone name for Wireguard server endpoint"
 }
+
+variable "cloudwatch_alerts_phone_numbers" {
+  type        = list(string)
+  description = "Phone numbers to get monitoring alerts from CloudWatch"
+  default     = []
+}
+
+variable "cloudwatch_alerts_emails" {
+  type        = list(string)
+  description = "Email addresses to get monitoring alerts from CloudWatch"
+  default     = []
+}
