@@ -6,8 +6,8 @@ MTU = ${mtu}
 
 #TODO: Think about to have this as an option
 ### Rules for bounce server
-# PostUp = iptables -A FORWARD -i ${interface_name} -j ACCEPT; iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
-# PostDown = iptables -D FORWARD -i ${interface_name} -j ACCEPT; iptables -t nat -D POSTROUTING -o ens5 -j MASQUERADE
+# PostUp = iptables -A FORWARD -i ${interface_name} -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+# PostDown = iptables -D FORWARD -i ${interface_name} -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
 ###
 
 PreUp = aws s3 cp s3://${s3_bucket_name}/${interface_name}.conf  /etc/wireguard/ --region ${region}

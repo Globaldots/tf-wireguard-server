@@ -15,7 +15,7 @@ resource "aws_security_group_rule" "instance-ingress-1" {
   type              = "ingress"
   from_port         = var.wg_listen_ports[count.index]
   to_port           = var.wg_listen_ports[count.index]
-  cidr_blocks       = [data.aws_vpc.main.cidr_block]
+  cidr_blocks       = var.wg_allow_connections_from_subnets
   protocol          = "udp"
   security_group_id = aws_security_group.instance.id
 }
@@ -27,6 +27,7 @@ resource "aws_security_group_rule" "instance-ingress-2" {
   cidr_blocks       = [data.aws_vpc.main.cidr_block]
   protocol          = "tcp"
   security_group_id = aws_security_group.instance.id
+  description       = "SSH & NLB healthcheck"
 }
 
 resource "aws_security_group_rule" "instance-egress-1" {

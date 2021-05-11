@@ -7,14 +7,6 @@
 | random | ~> 3.1.0 |
 | wireguard | 0.1.3 |
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| aws | ~> 3.37.0 |
-| random | ~> 3.1.0 |
-| wireguard | 0.1.3 |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -23,14 +15,14 @@
 | ec2\_ssh\_public\_key | EC2 SSH public key | `string` | n/a | yes |
 | enable\_termination\_protection | Enable termination protection for resources | `bool` | n/a | yes |
 | s3\_bucket\_name\_prefix | Prefix to be added to S3 bucket name | `string` | n/a | yes |
-| tags | Tags to assign to all resources | `map(string)` | `{}` | no |
 | vpc\_availability\_zones | VPC availability zones | `list(string)` | n/a | yes |
 | vpc\_cidr | AWS desired VPC CIDR | `string` | n/a | yes |
 | vpc\_private\_subnets | VPC private subnet CIDRs | `list(string)` | n/a | yes |
 | vpc\_public\_subnets | VPC public subnet CIDRs | `list(string)` | n/a | yes |
 | wg\_allow\_connections\_from\_subnets | Restrict Wireguard server availability to defined subnets | `list(string)` | n/a | yes |
-| wg\_listen\_ports | Wireguard listen ports | `list(string)` | <pre>[<br>  "51820",<br>  "4500",<br>  "53"<br>]</pre> | no |
 | wg\_peers | Wireguard clients (peers) configuration | `map(object({ public_key = string, allowed_ips = string }))` | n/a | yes |
+| tags | Tags to assign to all resources | `map(string)` | `{}` | no |
+| wg\_listen\_ports | Wireguard listen ports | `list(string)` | <pre>[<br>  "51820",<br>  "4500",<br>  "53"<br>]</pre> | no |
 
 ## Outputs
 

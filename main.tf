@@ -43,6 +43,7 @@ resource "aws_launch_template" "main" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes        = [image_id]
   }
 }
 
@@ -64,7 +65,7 @@ resource "aws_autoscaling_group" "main" {
     ignore_changes        = [load_balancers, target_group_arns]
   }
 
-  vpc_zone_identifier = [for item in data.aws_subnet.main : item.id]
+  vpc_zone_identifier = [for item in data.aws_subnet.main_private : item.id]
 
   dynamic "tag" {
     for_each = merge(var.tags, { "wireguard-server-name" : local.wg_server_name })

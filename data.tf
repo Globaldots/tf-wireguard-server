@@ -28,9 +28,15 @@ data "aws_ami" "ami" {
   owners = ["amazon"]
 }
 
-data "aws_subnet" "main" {
-  count      = length(var.subnet_cidrs)
-  cidr_block = var.subnet_cidrs[count.index]
+data "aws_subnet" "main_private" {
+  count      = length(var.private_subnet_cidrs)
+  cidr_block = var.private_subnet_cidrs[count.index]
+  vpc_id     = var.vpc_id
+}
+
+data "aws_subnet" "main_public" {
+  count      = length(var.public_subnet_cidrs)
+  cidr_block = var.public_subnet_cidrs[count.index]
   vpc_id     = var.vpc_id
 }
 

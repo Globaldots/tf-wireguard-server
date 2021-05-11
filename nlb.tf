@@ -5,7 +5,7 @@ resource "aws_lb" "main" {
   name                             = "wireguard-${var.name_suffix}"
   internal                         = false
   load_balancer_type               = "network"
-  subnets                          = [for item in data.aws_subnet.main : item.id]
+  subnets                          = [for item in data.aws_subnet.main_public : item.id]
   enable_cross_zone_load_balancing = true
 
   access_logs {

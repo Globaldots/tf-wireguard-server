@@ -16,14 +16,14 @@ dns_zone_name                     = "egorzp.info"
 wg_peers = {
   yurii = {
     public_key  = "dRWcZBv2++23GZ0DdoFLrXvGch4lcZ2Fj7yeaSAUB2I="
-    allowed_ips = "10.0.44.2/24"
+    allowed_ips = "10.0.44.2/32"
   }
   alex = {
     public_key  = "D9HA+Qhe/kR0nwVxId2vNSuP0SozOh3umC5PKvL3b1Y="
-    allowed_ips = "10.0.44.3/24"
+    allowed_ips = "10.0.44.3/32"
   }
   roman = {
     public_key  = "U/2FptGTCVaY3laN49blUv1zf8KcD8oVALzQ0j/HSzY="
-    allowed_ips = "10.0.44.4/24"
+    allowed_ips = "10.0.44.4/32"
   }
 }

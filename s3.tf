@@ -2,8 +2,9 @@
 # S3 bucket for Wireguard configuration #
 #########################################
 resource "aws_s3_bucket" "main" {
-  bucket = "${var.s3_bucket_name_prefix}-wireguard-configuration-${var.name_suffix}"
-  acl    = "private"
+  bucket        = "${var.s3_bucket_name_prefix}-wireguard-configuration-${var.name_suffix}"
+  acl           = "private"
+  force_destroy = true
 
   server_side_encryption_configuration {
     rule {
@@ -55,8 +56,9 @@ resource "aws_s3_bucket_public_access_block" "main" {
 # S3 bucket for LB access logs #
 ################################
 resource "aws_s3_bucket" "access_logs" {
-  bucket = "${var.s3_bucket_name_prefix}-wireguard-access-logs-${var.name_suffix}"
-  acl    = "private"
+  bucket        = "${var.s3_bucket_name_prefix}-wireguard-access-logs-${var.name_suffix}"
+  acl           = "private"
+  force_destroy = true
 
   server_side_encryption_configuration {
     rule {

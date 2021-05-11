@@ -23,7 +23,7 @@ locals {
         dns         = var.wg_dns_server
         mtu         = var.wg_mtu
         name        = local.wg_server_name
-        public_key  = value.public_key
+        public_key  = var.wg_public_key
         allowed_ips = split(",", replace(value.allowed_ips, " ", ""))[0]
         wg_cidr     = var.wg_cidr
         endpoint    = "${aws_route53_record.main.fqdn}:${contains(var.wg_listen_ports, "4500") ? 4500 : var.wg_listen_ports[0]}"

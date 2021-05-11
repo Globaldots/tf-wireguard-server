@@ -15,9 +15,14 @@ variable "vpc_id" {
   description = "AWS VPC ID"
 }
 
-variable "subnet_cidrs" {
+variable "public_subnet_cidrs" {
   type        = list(string)
-  description = "VPC subnet CIDRs to create resources in (multiple subnets are used for HA)"
+  description = "VPC public subnet CIDRs to create NLB in (multiple subnets are used for HA, AZs of public & private subnets should match)"
+}
+
+variable "private_subnet_cidrs" {
+  type        = list(string)
+  description = "VPC private subnet CIDRs to create EC2 instances in (AZs of public & private subnets should match)"
 }
 
 variable "tags" {
@@ -45,8 +50,13 @@ variable "wg_listen_ports" {
 
 variable "wg_private_key" {
   type        = string
-  description = "WireGuard server private Key"
+  description = "WireGuard server private key"
   sensitive   = true
+}
+
+variable "wg_public_key" {
+  type        = string
+  description = "WireGuard server public key"
 }
 
 variable "wg_dns_server" {
