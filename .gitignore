@@ -45,3 +45,10 @@ build/
 *.egg-info/
 
 .env
+=======
+*plan
+.terraform-version
+.terraform.lock.hcl
+
+# IDE
+.idea/
