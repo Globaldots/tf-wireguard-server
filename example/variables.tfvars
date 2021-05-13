@@ -19,7 +19,7 @@ wg_peers = {
     allowed_ips = "10.0.44.2/32"
   }
   alex = {
-    public_key  = "D9HA+Qhe/kR0nwVxId2vNSuP0SozOh3umC5PKvL3b1Y="
+    public_key  = "BqbBeWQchKoL2VavDhGyypuOkX8trQtKvIolnyOGzTY="
     allowed_ips = "10.0.44.3/32"
   }
   roman = {
