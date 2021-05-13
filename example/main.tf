@@ -1,3 +1,8 @@
+# Get list of available AZs for current region
+data "aws_availability_zones" "main" {
+  state = "available"
+}
+
 # Generate private/public key pair for Wireguard server
 resource "wireguard_asymmetric_key" "wg_key_pair" {}
 
@@ -16,7 +21,7 @@ module "vpc" {
   name = "Test-VPC-for-WireGuard-${random_pet.main.id}"
 
   cidr               = var.vpc_cidr
-  azs                = var.vpc_availability_zones
+  azs                = slice(data.aws_availability_zones.main.names, 0, var.az_count)
   private_subnets    = var.vpc_private_subnets
   public_subnets     = var.vpc_public_subnets
   enable_nat_gateway = true
