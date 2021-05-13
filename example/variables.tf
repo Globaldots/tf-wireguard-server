@@ -3,9 +3,9 @@ variable "vpc_cidr" {
   description = "AWS desired VPC CIDR"
 }
 
-variable "vpc_availability_zones" {
-  type        = list(string)
-  description = "VPC availability zones"
+variable "az_count" {
+  type        = string
+  description = "Number of availability zones to create VPC subnets in"
 }
 
 variable "wg_listen_ports" {
