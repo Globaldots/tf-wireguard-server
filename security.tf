@@ -30,6 +30,17 @@ resource "aws_security_group_rule" "instance-ingress-2" {
   description       = "SSH & NLB healthcheck"
 }
 
+resource "aws_security_group_rule" "instance-ingress-3" {
+  count             = length(local.prom_exporters_ports)
+  type              = "ingress"
+  from_port         = local.prom_exporters_ports[count.index]
+  to_port           = local.prom_exporters_ports[count.index]
+  cidr_blocks       = [data.aws_vpc.main.cidr_block]
+  protocol          = "tcp"
+  security_group_id = aws_security_group.instance.id
+  description       = "Prometheus Exporters"
+}
+
 resource "aws_security_group_rule" "instance-egress-1" {
   type              = "egress"
   from_port         = 0
