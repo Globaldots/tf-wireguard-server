@@ -42,6 +42,29 @@ enable_wireguard_service() {
   systemctl enable wg-quick@${interface_name}
 }
 
+# Prometheus Node Exporter
+enable_prom_node_exporter() {
+  curl --tlsv1.2 --retry 3 --retry-delay 5 -Svo /etc/yum.repos.d/_copr_ibotty-prometheus-exporters.repo https://copr.fedorainfracloud.org/coprs/ibotty/prometheus-exporters/repo/epel-7/ibotty-prometheus-exporters-epel-7.repo
+  yum install node_exporter -y
+  systemctl enable node_exporter
+  systemctl start node_exporter
+}
+
+# Prometheus Wireguard Exporter
+enable_prom_wireguard_exporter() {
+  yum install docker -y
+  systemctl enable docker
+  systemctl start docker
+  docker run -d --restart unless-stopped --init --net=host --cap-add=NET_ADMIN mindflavor/prometheus-wireguard-exporter
+}
+
+# CloudWatch monitoring agent
+enable_cloudwatch_agent() {
+  yum install amazon-cloudwatch-agent -y
+  systemctl enable amazon-cloudwatch-agent
+  systemctl start amazon-cloudwatch-agent
+}
+
 # Cleanup userdata script
 clean_up() {
   rm -f "$0"
@@ -55,6 +78,9 @@ main() {
   tune_kernel_parameters
   download_wg_conf
   enable_wireguard_service
+  enable_prom_node_exporter
+  enable_prom_wireguard_exporter
+  enable_cloudwatch_agent
 }
 
 main
