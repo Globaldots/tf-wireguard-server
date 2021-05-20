@@ -30,4 +30,5 @@ locals {
       }
     )
   ]
+  prom_exporters_ports = [9100, 9586]
 }
