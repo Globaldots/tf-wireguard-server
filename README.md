@@ -40,6 +40,8 @@ Please, find deployment instruction in README.md file of repository root.
 | wg\_listen\_ports | Wireguard listen ports | `list(string)` | <pre>[<br>  "51820",<br>  "4500",<br>  "53"<br>]</pre> | no |
 | wg\_mtu | MTU value for Wireguard network | `number` | `"1420"` | no |
 | wg\_peers | Wireguard clients (peers) configuration | `map(object({ public_key = string, allowed_ips = string }))` | `{}` | no |
+| wg\_restart\_lambda\_max\_errors\_count | Lambda which restarts Wireguard instances when configuration changes detected will stop execution if number of errors exceed this value | `number` | `0` | no |
+| wg\_restart\_lambda\_timeout\_sec | Timeout for Lambda which restarts Wireguard instances when configuration changes occured | `number` | `300` | no |
 
 ## Outputs
 
