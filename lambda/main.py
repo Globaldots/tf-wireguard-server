@@ -34,7 +34,7 @@ def get_ec2_instances_ids_by_tags(tags):
     for instance in response['Reservations']:
         ec2_ids.append(instance['Instances'][0]['InstanceId'])
 
-    return ec2_ids if ec2_ids else []
+    return ec2_ids
 
 
 def lambda_handler(*_):
