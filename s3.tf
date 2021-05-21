@@ -159,16 +159,18 @@ resource "aws_s3_bucket_object" "main" {
   bucket = aws_s3_bucket.main.id
   key    = "${local.wg_interface_name}.conf"
   content = templatefile("${path.module}/templates/wg0.conf.tpl", {
-    name           = local.wg_server_name
-    address        = "${cidrhost(var.wg_cidr, 1)}/${replace(var.wg_cidr, "/.*\\//", "")}"
-    s3_bucket_name = aws_s3_bucket.main.id
-    region         = aws_s3_bucket.main.region
-    cidr           = var.wg_cidr
-    private_key    = var.wg_private_key
-    dns_server     = var.wg_dns_server
-    peers          = var.wg_peers
-    mtu            = var.wg_mtu
-    interface_name = local.wg_interface_name
+    name              = local.wg_server_name
+    address           = "${cidrhost(var.wg_cidr, 1)}/${replace(var.wg_cidr, "/.*\\//", "")}"
+    s3_bucket_name    = aws_s3_bucket.main.id
+    region            = aws_s3_bucket.main.region
+    cidr              = var.wg_cidr
+    private_key       = var.wg_private_key
+    dns_server        = var.wg_dns_server
+    peers             = var.wg_peers
+    mtu               = var.wg_mtu
+    wg_interface_name = local.wg_interface_name
+    host_nic          = var.host_nic
+    bounce_server     = var.bounce_server
   })
   tags = var.tags
 }

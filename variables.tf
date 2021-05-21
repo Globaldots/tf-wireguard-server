@@ -36,6 +36,18 @@ variable "ssh_keypair_name" {
   description = "EC2 SSH keypair name"
 }
 
+variable "host_nic" {
+  type        = string
+  description = "Default Network Interface Card on a host system"
+  default     = "eth0"
+}
+
+variable "bounce_server" {
+  description = "Bounce server mode. Ref: https://github.com/pirate/wireguard-docs#bounce-server"
+  type        = bool
+  default     = false
+}
+
 variable "wg_cidr" {
   type        = string
   description = "Wireguard network subnet CIDR"
