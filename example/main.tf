@@ -36,7 +36,7 @@ resource "aws_key_pair" "main" {
   tags       = var.tags
 }
 
-# Envoke the Wireguard module
+# Invoke the Wireguard module
 module "wg" {
   source = "../"
 
