@@ -22,7 +22,7 @@ jobs:
       - name: Execute terraform fmt -check -recursive .
         run: terraform fmt -check -recursive .
 
-      -name: Install pre-commit
+      - name: Install pre-commit
         run: |
           apt update && apt install -y gawk unzip software-properties-common
           add-apt-repository ppa:deadsnakes/ppa
