@@ -26,3 +26,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y gawk unzip software-properties-common
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt install -y python3.7 python3-pip
+          pip3 install pre-commit
