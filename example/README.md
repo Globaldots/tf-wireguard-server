@@ -11,11 +11,11 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| az\_count | Number of availability zones to create VPC subnets in | `string` | n/a | yes |
 | dns\_zone\_name | Route53 DNS zone name for Wireguard server endpoint | `string` | n/a | yes |
 | ec2\_ssh\_public\_key | EC2 SSH public key | `string` | n/a | yes |
 | enable\_termination\_protection | Enable termination protection for resources | `bool` | n/a | yes |
 | s3\_bucket\_name\_prefix | Prefix to be added to S3 bucket name | `string` | n/a | yes |
-| vpc\_availability\_zones | VPC availability zones | `list(string)` | n/a | yes |
 | vpc\_cidr | AWS desired VPC CIDR | `string` | n/a | yes |
 | vpc\_private\_subnets | VPC private subnet CIDRs | `list(string)` | n/a | yes |
 | vpc\_public\_subnets | VPC public subnet CIDRs | `list(string)` | n/a | yes |

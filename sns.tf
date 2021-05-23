@@ -1,3 +1,6 @@
+############################
+# CloudWatch alarms topic #
+############################
 resource "aws_sns_topic" "main" {
   count             = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? 1 : 0
   name              = "wireguard-${var.name_suffix}-cloudwatch-alarms"
@@ -44,4 +47,32 @@ resource "aws_sns_topic_subscription" "email" {
   topic_arn = aws_sns_topic.main[0].arn
   protocol  = "email"
   endpoint  = var.cloudwatch_alerts_emails[count.index]
+}
+
+##################################
+# Lambda failed executions topic #
+##################################
+resource "aws_sns_topic" "main_lambda" {
+  name              = "wireguard-${var.name_suffix}-restart-lambda-failed-executions"
+  kms_master_key_id = "alias/aws/sns"
+  policy            = <<EOF
+{
+   "Version":"2008-10-17",
+   "Id":"AllowPushFromCloudWatch",
+   "Statement":[
+      {
+         "Sid":"AllowPublishEvents",
+         "Effect":"Allow",
+         "Principal":{
+            "Service": ["lambda.amazonaws.com"]
+         },
+         "Action":[
+            "SNS:GetTopicAttributes",
+            "SNS:Publish"
+         ],
+         "Resource":"arn:aws:sns:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:wireguard-${var.name_suffix}-restart-lambda-failed-executions"
+      }
+   ]
+}
+EOF
 }

@@ -132,3 +132,15 @@ variable "cloudwatch_alerts_emails" {
   description = "Email addresses to get monitoring alerts from CloudWatch"
   default     = []
 }
+
+variable "wg_restart_lambda_timeout_sec" {
+  type        = number
+  description = "Timeout for Lambda which restarts Wireguard instances when configuration changes occured"
+  default     = 300
+}
+
+variable "wg_restart_lambda_max_errors_count" {
+  type        = number
+  description = "Lambda which restarts Wireguard instances when configuration changes detected will stop execution if number of errors exceed this value"
+  default     = 0
+}

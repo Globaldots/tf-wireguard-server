@@ -40,7 +40,7 @@ EOF
     enabled = true
   }
 
-  tags = merge(var.tags, { "wireguard-server-name" : local.wg_server_name })
+  tags = merge(var.tags, { "${local.wg_identification_tag_name}" : local.wg_server_name })
 }
 
 resource "aws_s3_bucket_public_access_block" "main" {
@@ -125,7 +125,7 @@ EOF
     }
   }
 
-  tags = merge(var.tags, { "wireguard-server-name" : local.wg_server_name })
+  tags = merge(var.tags, { "${local.wg_identification_tag_name}" : local.wg_server_name })
 }
 
 resource "aws_s3_bucket_public_access_block" "access_logs" {
