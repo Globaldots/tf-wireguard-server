@@ -80,6 +80,9 @@ resource "aws_autoscaling_group" "main" {
   depends_on = [aws_s3_bucket_object.main]
 }
 
+####################################
+# Auto Scaling Attachment resource #
+####################################
 resource "aws_autoscaling_attachment" "main" {
   autoscaling_group_name = aws_autoscaling_group.main.id
   alb_target_group_arn   = aws_lb_target_group.main.arn

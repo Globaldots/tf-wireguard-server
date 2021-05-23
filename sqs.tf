@@ -17,7 +17,9 @@ resource "aws_sqs_queue" "main" {
 
   tags = var.tags
 }
-
+###################################################################################################
+# Allows you to set a policy of an SQS Queue while referencing ARN of the queue within the policy #
+###################################################################################################
 resource "aws_sqs_queue_policy" "main" {
   queue_url = aws_sqs_queue.main.id
   policy    = <<EOF
