@@ -16,5 +16,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
+      - name: List files
+        run: pwd && ls -la
+
       - name: Execute terraform fmt -check -recursive .
         run: terraform fmt -check -recursive .
