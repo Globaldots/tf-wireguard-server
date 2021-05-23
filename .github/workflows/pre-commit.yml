@@ -21,3 +21,10 @@ jobs:
 
       - name: Execute terraform fmt -check -recursive .
         run: terraform fmt -check -recursive .
+
+      -name: Install pre-commit
+        run: |
+          apt update && apt install -y gawk unzip software-properties-common
+          add-apt-repository ppa:deadsnakes/ppa
+          apt install -y python3.7 python3-pip
+          pip3 install pre-commit
