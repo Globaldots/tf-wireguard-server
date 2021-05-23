@@ -25,3 +25,4 @@ jobs:
       - name: Install pre-commit
         run: |
           sudo apt update
+          sudo apt install -y gawk unzip software-properties-common
