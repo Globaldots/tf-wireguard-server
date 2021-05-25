@@ -68,7 +68,7 @@ resource "aws_autoscaling_group" "main" {
   vpc_zone_identifier = [for item in data.aws_subnet.main_private : item.id]
 
   dynamic "tag" {
-    for_each = merge(var.tags, { local.wg_identification_tag_name : local.wg_server_name })
+    for_each = merge(var.tags, { "${local.wg_identification_tag_name}" : local.wg_server_name })
     content {
       key                 = tag.key
       value               = tag.value
