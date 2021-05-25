@@ -1,3 +1,6 @@
+#############################
+# CPU metric for Cloudwatch #
+#############################
 resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   alarm_name          = "wireguard-${var.name_suffix}-high-cpu-utilization"
   alarm_description   = "Alarm gets triggered by high CPU utilization of wireguard-${var.name_suffix} EC2 instances"
@@ -18,6 +21,9 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   }
 }
 
+####################
+# EC2 status check #
+####################
 resource "aws_cloudwatch_metric_alarm" "status_checks" {
   alarm_name          = "wireguard-${var.name_suffix}-status-checks-failed"
   alarm_description   = "Alarm gets triggered by failed EC2 status checks of wireguard-${var.name_suffix} instances"

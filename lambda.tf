@@ -1,9 +1,15 @@
+####################################################################
+# Generates an archive from content, a file, or directory of files #
+####################################################################
 data "archive_file" "main" {
   type        = "zip"
   source_file = "${path.module}/lambda/main.py"
   output_path = "${path.module}/lambda/restart-wireguard.zip"
 }
 
+#######################################
+# Provides a Lambda Function resource #
+#######################################
 resource "aws_lambda_function" "main" {
   function_name = "wireguard-${var.name_suffix}-restart-instances"
   description   = "Function to restart Wireguard (${var.name_suffix}) when configuration file was changed"
@@ -32,6 +38,9 @@ resource "aws_lambda_function" "main" {
   tags = var.tags
 }
 
+##########################################
+# Provides a Lambda event source mapping #
+##########################################
 resource "aws_lambda_event_source_mapping" "main" {
   batch_size       = 1
   event_source_arn = aws_sqs_queue.main.arn

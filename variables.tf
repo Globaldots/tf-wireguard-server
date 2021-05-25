@@ -1,146 +1,146 @@
 variable "ec2_instance_type" {
-  type        = string
   description = "EC2 instance type"
+  type        = string
   default     = "t3a.micro"
 }
 
 variable "ec2_iam_policy_names" {
-  type        = list(string)
   description = "Additional IAM policies to assign to EC2 instances through instance profile"
+  type        = list(string)
   default     = []
 }
 
 variable "vpc_id" {
-  type        = string
   description = "AWS VPC ID"
+  type        = string
 }
 
 variable "public_subnet_cidrs" {
-  type        = list(string)
   description = "VPC public subnet CIDRs to create NLB in (multiple subnets are used for HA, AZs of public & private subnets should match)"
+  type        = list(string)
 }
 
 variable "private_subnet_cidrs" {
-  type        = list(string)
   description = "VPC private subnet CIDRs to create EC2 instances in (AZs of public & private subnets should match)"
+  type        = list(string)
 }
 
 variable "tags" {
-  type        = map(string)
   description = "Tags to assign to all resources"
+  type        = map(string)
   default     = {}
 }
 
 variable "ssh_keypair_name" {
-  type        = string
   description = "EC2 SSH keypair name"
+  type        = string
 }
 
 variable "wg_cidr" {
-  type        = string
   description = "Wireguard network subnet CIDR"
+  type        = string
   default     = "10.0.44.0/24"
 }
 
 variable "wg_listen_ports" {
-  type        = list(string)
   description = "Wireguard listen ports"
+  type        = list(string)
   default     = ["51820", "4500", "53"]
 }
 
 variable "wg_private_key" {
-  type        = string
   description = "WireGuard server private key"
+  type        = string
   sensitive   = true
 }
 
 variable "wg_public_key" {
-  type        = string
   description = "WireGuard server public key"
+  type        = string
 }
 
 variable "wg_dns_server" {
-  type        = string
   description = "DNS server for Wireguard network"
+  type        = string
   default     = "8.8.8.8"
 }
 
 variable "wg_peers" {
-  type        = map(object({ public_key = string, allowed_ips = string }))
   description = "Wireguard clients (peers) configuration"
+  type        = map(object({ public_key = string, allowed_ips = string }))
   default     = {}
 }
 
 variable "wg_mtu" {
-  type        = number
   description = "MTU value for Wireguard network"
+  type        = number
   default     = "1420"
 }
 
 variable "name_suffix" {
-  type        = string
   description = "Suffix to be added to all resources"
+  type        = string
 }
 
 variable "s3_bucket_name_prefix" {
-  type        = string
   description = "Prefix to be added to S3 bucket name"
+  type        = string
 }
 
 variable "enable_termination_protection" {
-  type        = bool
   description = "Enable termination protection for resources"
+  type        = bool
   default     = true
 }
 
 variable "wg_ha_instance_min_count" {
-  type        = number
   description = "Minimum number of Wiregard instances (HA configuration)"
+  type        = number
   default     = 2
 }
 
 variable "wg_ha_instance_max_count" {
-  type        = number
   description = "Maximum number of Wiregard instances (HA configuration)"
+  type        = number
   default     = 2
 }
 
 variable "wg_ha_instance_desired_count" {
-  type        = number
   description = "Desired number of Wiregard instances (HA configuration)"
+  type        = number
   default     = 2
 }
 
 variable "wg_allow_connections_from_subnets" {
-  type        = list(string)
   description = "Restrict Wireguard server availability to defined subnets"
+  type        = list(string)
 }
 
 variable "dns_zone_name" {
-  type        = string
   description = "Route53 DNS zone name for Wireguard server endpoint"
+  type        = string
 }
 
 variable "cloudwatch_alerts_phone_numbers" {
-  type        = list(string)
   description = "Phone numbers to get monitoring alerts from CloudWatch"
+  type        = list(string)
   default     = []
 }
 
 variable "cloudwatch_alerts_emails" {
-  type        = list(string)
   description = "Email addresses to get monitoring alerts from CloudWatch"
+  type        = list(string)
   default     = []
 }
 
 variable "wg_restart_lambda_timeout_sec" {
-  type        = number
   description = "Timeout for Lambda which restarts Wireguard instances when configuration changes occured"
+  type        = number
   default     = 300
 }
 
 variable "wg_restart_lambda_max_errors_count" {
-  type        = number
   description = "Lambda which restarts Wireguard instances when configuration changes detected will stop execution if number of errors exceed this value"
+  type        = number
   default     = 0
 }

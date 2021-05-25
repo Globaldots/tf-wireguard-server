@@ -19,6 +19,9 @@ resource "aws_lb" "main" {
   tags = var.tags
 }
 
+########################
+# Target group for NLB #
+########################
 resource "aws_lb_target_group" "main" {
   name     = "wireguard-${var.name_suffix}"
   port     = 51820
@@ -40,6 +43,9 @@ resource "aws_lb_target_group" "main" {
   }
 }
 
+#################
+# NLB Listeners #
+#################
 resource "aws_lb_listener" "main" {
   count             = length(var.wg_listen_ports)
   load_balancer_arn = aws_lb.main.arn

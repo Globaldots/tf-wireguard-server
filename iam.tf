@@ -46,12 +46,18 @@ EOF
   tags = var.tags
 }
 
+################################################
+# Attaches a Managed IAM Policy to an IAM role #
+################################################
 resource "aws_iam_role_policy_attachment" "main" {
   count      = length(local.ec2_iam_policy_names)
   role       = aws_iam_role.main.name
   policy_arn = "arn:aws:iam::aws:policy/${local.ec2_iam_policy_names[count.index]}"
 }
 
+####################################
+# Provides an IAM instance profile #
+####################################
 resource "aws_iam_instance_profile" "main" {
   name = "wireguard-configuration-${var.name_suffix}"
   role = aws_iam_role.main.name

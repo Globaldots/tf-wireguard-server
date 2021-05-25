@@ -34,6 +34,9 @@ resource "aws_sns_topic" "main" {
 EOF
 }
 
+#####################################################
+# Provides a resource for subscribing to SNS topics #
+#####################################################
 resource "aws_sns_topic_subscription" "text" {
   count     = length(var.cloudwatch_alerts_phone_numbers)
   topic_arn = aws_sns_topic.main[0].arn
@@ -41,7 +44,11 @@ resource "aws_sns_topic_subscription" "text" {
   endpoint  = var.cloudwatch_alerts_phone_numbers[count.index]
 }
 
-# Email subscriptions must be confirmed by clicking on the URL in confirmation email.
+
+#####################################################
+# Provides a resource for subscribing to SNS topics #
+#####################################################
+// Email subscriptions must be confirmed by clicking on the URL in confirmation email.
 resource "aws_sns_topic_subscription" "email" {
   count     = length(var.cloudwatch_alerts_emails)
   topic_arn = aws_sns_topic.main[0].arn

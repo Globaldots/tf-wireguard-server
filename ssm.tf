@@ -1,10 +1,13 @@
+######################################
+# Provides an SSM Document resource  #
+######################################
 resource "aws_ssm_document" "main" {
   name          = local.ssm_document_name
   document_type = "Command"
   target_type   = "/AWS::EC2::Instance"
   permissions = {
     type        = "Share"
-    account_ids = "${data.aws_caller_identity.current.account_id}"
+    account_ids = data.aws_caller_identity.current.account_id
   }
 
   content = <<-EOT
