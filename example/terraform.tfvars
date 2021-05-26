@@ -23,4 +23,8 @@ wg_peers = {
     public_key  = "U/2FptGTCVaY3laN49blUv1zf8KcD8oVALzQ0j/HSzY="
     allowed_ips = "10.0.44.4/32"
   }
+  test_user = {
+    public_key  = "" # generate
+    allowed_ips = "10.0.45.5/32"
+  }
 }

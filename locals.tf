@@ -15,8 +15,15 @@ locals {
   ec2_iam_policy_names = concat(var.ec2_iam_policy_names, [
     "CloudWatchAgentServerPolicy", "AmazonSSMManagedInstanceCore", "AmazonSSMDirectoryServiceAccess"
   ])
+
+  # Build peers map with both existing and generated keys
+  wg_peers = {
+    for k, v in var.wg_peers :
+    k => merge(v, try({ public_key = wireguard_asymmetric_key.generated[k].public_key }, {}))
+  }
+
   // TODO: fix problem when client config isn't correctly generated if allowed_ips contains multiple values
-  wireguard_client_configs = [for key, value in var.wg_peers :
+  wireguard_client_configs = [for key, value in local.wg_peers :
     templatefile(
       "${path.module}/templates/wg0-client.conf.tpl",
       {
@@ -33,4 +40,14 @@ locals {
   ]
   prom_exporters_ports = [9100, 9586]
   ssm_document_name    = "wireguard-server-reload-${var.name_suffix}"
+}
+
+# Generate a key pair for users with missing public keys
+resource "wireguard_asymmetric_key" "generated" {
+  for_each = toset(
+    [
+      for k, v in var.wg_peers : k
+      if try(v.public_key, "") == ""
+    ]
+  )
 }
