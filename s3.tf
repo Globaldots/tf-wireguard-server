@@ -6,6 +6,10 @@ resource "aws_s3_bucket" "main" {
   acl           = "private"
   force_destroy = true
 
+  versioning {
+    enabled = true
+  }
+
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -36,11 +40,7 @@ resource "aws_s3_bucket" "main" {
 }
 EOF
 
-  versioning {
-    enabled = true
-  }
-
-  tags = merge(var.tags, { "wireguard-server-name" : local.wg_server_name })
+  tags = merge(var.tags, { "${local.wg_identification_tag_name}" : local.wg_server_name })
 }
 
 resource "aws_s3_bucket_public_access_block" "main" {
@@ -125,9 +125,12 @@ EOF
     }
   }
 
-  tags = merge(var.tags, { "wireguard-server-name" : local.wg_server_name })
+  tags = merge(var.tags, { "${local.wg_identification_tag_name}" : local.wg_server_name })
 }
 
+#############################################################
+# Manages S3 bucket-level Public Access Block configuration #
+#############################################################
 resource "aws_s3_bucket_public_access_block" "access_logs" {
   bucket = aws_s3_bucket.access_logs.id
 

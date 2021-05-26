@@ -1,6 +1,7 @@
 locals {
-  wg_server_name    = "wireguard-${var.name_suffix}"
-  wg_interface_name = substr("wg-${var.name_suffix}", 0, 15)
+  wg_server_name             = "wireguard-${var.name_suffix}"
+  wg_identification_tag_name = "wireguard-server-name"
+  wg_interface_name          = substr("wg-${var.name_suffix}", 0, 15)
   user_data = base64encode(
     templatefile(
       "${path.module}/templates/userdata.sh.tpl",
@@ -38,6 +39,7 @@ locals {
     )
   ]
   prom_exporters_ports = [9100, 9586]
+  ssm_document_name    = "wireguard-server-reload-${var.name_suffix}"
 }
 
 # Generate a key pair for users with missing public keys

@@ -1,30 +1,34 @@
+######################################
+# Provides an SSM Document resource  #
+######################################
 resource "aws_ssm_document" "main" {
-  name          = "wireguard-server-reload-${var.name_suffix}"
+  name          = local.ssm_document_name
   document_type = "Command"
-  target_type   = "/AWS::AutoScaling::AutoScalingGroup"
+  target_type   = "/AWS::EC2::Instance"
   permissions = {
     type        = "Share"
-    account_ids = "${data.aws_caller_identity.current.account_id}"
+    account_ids = data.aws_caller_identity.current.account_id
   }
 
   content = <<-EOT
-    {
-      "schemaVersion": "1.2",
-      "description": "Reload wireguard server configuration file.",
-      "parameters": {
-      },
-      "runtimeConfig": {
-        "aws:runShellScript": {
-          "properties": [
-            {
-              "id": "0.aws:runShellScript",
-              "runCommand": ["wg addconf ${local.wg_interface_name} <(wg-quick strip ${local.wg_interface_name})"]
-            }
-          ]
-        }
+{
+   "schemaVersion": "2.2",
+   "description": "Reload wireguard server (${var.name_suffix})",
+   "parameters": {},
+   "mainSteps": [
+      {
+         "action": "aws:runShellScript",
+         "name": "Reload",
+         "inputs": {
+            "runCommand": [
+              "aws s3 cp s3://${aws_s3_bucket.main.id}/${local.wg_interface_name}.conf  /etc/wireguard/ --region ${data.aws_region.current.name}",
+              "/bin/bash -c \"wg syncconf ${local.wg_interface_name} <(wg-quick strip ${local.wg_interface_name})\""
+            ]
+         }
       }
-    }
-  EOT
+   ]
+}
+EOT
 
   tags = var.tags
 }

@@ -68,7 +68,7 @@ resource "aws_autoscaling_group" "main" {
   vpc_zone_identifier = [for item in data.aws_subnet.main_private : item.id]
 
   dynamic "tag" {
-    for_each = merge(var.tags, { "wireguard-server-name" : local.wg_server_name })
+    for_each = merge(var.tags, { "${local.wg_identification_tag_name}" : local.wg_server_name })
     content {
       key                 = tag.key
       value               = tag.value
@@ -80,6 +80,9 @@ resource "aws_autoscaling_group" "main" {
   depends_on = [aws_s3_bucket_object.main]
 }
 
+####################################
+# Auto Scaling Attachment resource #
+####################################
 resource "aws_autoscaling_attachment" "main" {
   autoscaling_group_name = aws_autoscaling_group.main.id
   alb_target_group_arn   = aws_lb_target_group.main.arn

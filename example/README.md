@@ -1,3 +1,46 @@
+## How to
+This example supports both `terraform` and `terragrunt`
+
+### Run terragrunt
+```shell
+cd examples/
+export AWS_REGION=<your region>
+aws-vault exec $AWS_PROFILE --no-session  -- terragrunt init
+aws-vault exec $AWS_PROFILE --no-session  -- terragrunt plan
+aws-vault exec $AWS_PROFILE --no-session  -- terragrunt apply
+```
+
+### Get WG server's private/public keys
+```shell
+cd examples/
+aws-vault exec $AWS_PROFILE --no-session  -- terragrunt output wireguard_keys
+```
+
+### Run `terraform` in case you don't want to use `terragrunt`
+```shell
+cd examples/
+terraform plan -var-file terraform.tfvars
+```
+
+### Generate pair private/public keys for the client
+```shell
+umask 077 ; wg genkey > privatekey ; wg pubkey < privatekey > publickey
+```
+
+### Add your `publickey` and `allowed_ips`  to the `terraform.tfvars` file
+```shell
+wg_peers = {
+  myuser1 = {
+    public_key  = "<public key for myuser1>"
+    allowed_ips = "10.0.44.2/32"
+  }
+  myuser2 = {
+    public_key  = "<public key for myuser2>"
+    allowed_ips = "10.0.44.3/32"
+  }
+}
+```
+
 ## Requirements
 
 | Name | Version |
@@ -11,11 +54,11 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| az\_count | Number of availability zones to create VPC subnets in | `string` | n/a | yes |
 | dns\_zone\_name | Route53 DNS zone name for Wireguard server endpoint | `string` | n/a | yes |
 | ec2\_ssh\_public\_key | EC2 SSH public key | `string` | n/a | yes |
 | enable\_termination\_protection | Enable termination protection for resources | `bool` | n/a | yes |
 | s3\_bucket\_name\_prefix | Prefix to be added to S3 bucket name | `string` | n/a | yes |
-| vpc\_availability\_zones | VPC availability zones | `list(string)` | n/a | yes |
 | vpc\_cidr | AWS desired VPC CIDR | `string` | n/a | yes |
 | vpc\_private\_subnets | VPC private subnet CIDRs | `list(string)` | n/a | yes |
 | vpc\_public\_subnets | VPC public subnet CIDRs | `list(string)` | n/a | yes |
