@@ -18,6 +18,10 @@ resource "aws_s3_bucket" "main" {
     }
   }
 
+  logging {
+    target_bucket = aws_s3_bucket.main_logs.id
+  }
+
   policy = <<EOF
 {
     "Version": "2008-10-17",
@@ -52,9 +56,40 @@ resource "aws_s3_bucket_public_access_block" "main" {
   restrict_public_buckets = true
 }
 
+#################################################
+# Wireguard configuration S3 bucket access logs #
+#################################################
+resource "aws_s3_bucket" "main_logs" {
+  bucket        = "${var.s3_bucket_name_prefix}-wireguard-configuration-${var.name_suffix}-logs"
+  acl           = "log-delivery-write"
+  force_destroy = true
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        // https://docs.aws.amazon.com/AmazonS3/latest/userguide/enable-server-access-logging.html
+        // KMS isn't supported for log aggregation buckets
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
+  tags = merge(var.tags, { "${local.wg_identification_tag_name}" : local.wg_server_name })
+}
+
+resource "aws_s3_bucket_public_access_block" "main_logs" {
+  bucket = aws_s3_bucket.main_logs.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 ################################
 # S3 bucket for LB access logs #
 ################################
+# tfsec:ignore:AWS002
 resource "aws_s3_bucket" "access_logs" {
   bucket        = "${var.s3_bucket_name_prefix}-wireguard-access-logs-${var.name_suffix}"
   acl           = "private"
@@ -162,16 +197,17 @@ resource "aws_s3_bucket_object" "main" {
   bucket = aws_s3_bucket.main.id
   key    = "${local.wg_interface_name}.conf"
   content = templatefile("${path.module}/templates/wg0.conf.tpl", {
-    name           = local.wg_server_name
-    address        = "${cidrhost(var.wg_cidr, 1)}/${replace(var.wg_cidr, "/.*\\//", "")}"
-    s3_bucket_name = aws_s3_bucket.main.id
-    region         = aws_s3_bucket.main.region
-    cidr           = var.wg_cidr
-    private_key    = var.wg_private_key
-    dns_server     = var.wg_dns_server
-    peers          = var.wg_peers
-    mtu            = var.wg_mtu
-    interface_name = local.wg_interface_name
+    name                     = local.wg_server_name
+    address                  = "${cidrhost(var.wg_cidr, 1)}/${replace(var.wg_cidr, "/.*\\//", "")}"
+    s3_bucket_name           = aws_s3_bucket.main.id
+    region                   = aws_s3_bucket.main.region
+    cidr                     = var.wg_cidr
+    private_key              = var.wg_private_key
+    dns_server               = var.wg_dns_server
+    peers                    = var.wg_peers
+    mtu                      = var.wg_mtu
+    wg_interface_name        = local.wg_interface_name
+    host_main_interface_name = var.ec2_instance_main_interface_name
   })
   tags = var.tags
 }

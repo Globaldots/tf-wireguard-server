@@ -61,6 +61,141 @@ enable_prom_wireguard_exporter() {
 # CloudWatch monitoring agent
 enable_cloudwatch_agent() {
   yum install amazon-cloudwatch-agent -y
+  mkdir -p /opt/aws/amazon-cloudwatch-agent/etc
+  cat <<'EOT' >> /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+{
+  "agent": {
+    "metrics_collection_interval": 10,
+    "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log"
+  },
+  "metrics": {
+    "namespace": "${cloudwatch_agent_metrics_namespace}",
+    "metrics_collected": {
+      "cpu": {
+        "resources": [
+          "*"
+        ],
+        "measurement": [
+          "cpu_usage_nice",
+          "cpu_usage_idle",
+          "cpu_usage_guest"
+        ],
+        "totalcpu": false,
+        "metrics_collection_interval": 10
+      },
+      "disk": {
+        "resources": [
+          "/"
+        ],
+        "measurement": [
+          "free",
+          "total",
+          "used"
+        ],
+          "ignore_file_system_types": [
+          "sysfs", "devtmpfs"
+        ],
+        "metrics_collection_interval": 60
+      },
+      "diskio": {
+        "resources": [
+          "*"
+        ],
+        "measurement": [
+          "reads",
+          "writes",
+          "read_time",
+          "write_time",
+          "io_time"
+        ],
+        "metrics_collection_interval": 60
+      },
+      "swap": {
+        "measurement": [
+          "swap_used",
+          "swap_free",
+          "swap_used_percent"
+        ]
+      },
+      "mem": {
+        "measurement": [
+          "mem_used",
+          "mem_cached",
+          "mem_total"
+        ],
+        "metrics_collection_interval": 1
+      },
+      "net": {
+        "resources": [
+          "${host_main_interface_name}"
+        ],
+        "measurement": [
+          "bytes_sent",
+          "bytes_recv",
+          "drop_in",
+          "drop_out"
+        ]
+      },
+      "netstat": {
+        "measurement": [
+          "tcp_established",
+          "tcp_syn_sent",
+          "tcp_close"
+        ],
+        "metrics_collection_interval": 60
+      },
+      "processes": {
+        "measurement": [
+          "running",
+          "sleeping",
+          "dead"
+        ]
+      }
+    },
+    "append_dimensions": {
+      "InstanceId": "$${aws:InstanceId}",
+      "AutoScalingGroupName": "$${aws:AutoScalingGroupName}"
+    },
+    "aggregation_dimensions" : [["AutoScalingGroupName"], ["InstanceId", "InstanceType"]],
+    "force_flush_interval" : 30
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log",
+            "log_group_name": "/var/log/amazon/amazon-cloudwatch-agent",
+            "log_stream_name": "${wg_server_name}_{instance_id}",
+            "timezone": "UTC"
+          },
+          {
+            "file_path": "/var/log/messages",
+            "log_group_name":  "/ec2/var/log/messages",
+            "log_stream_name": "${wg_server_name}_{instance_id}",
+            "timezone": "UTC"
+          },
+          {
+            "file_path": "/var/log/secure",
+            "log_group_name":  "/ec2/var/log/secure",
+            "log_stream_name": "${wg_server_name}_{instance_id}",
+            "timezone": "UTC"
+          },
+          {
+            "file_path": "/var/log/yum.log",
+            "log_group_name":  "/ec2/var/log/yum",
+            "log_stream_name": "${wg_server_name}_{instance_id}",
+            "timezone": "UTC"
+          }
+        ]
+      }
+    },
+    "log_stream_name": "${wg_server_name}_{instance_id}",
+    "force_flush_interval" : 15
+  }
+}
+EOT
+
   systemctl enable amazon-cloudwatch-agent
   systemctl start amazon-cloudwatch-agent
 }
@@ -78,9 +213,15 @@ main() {
   tune_kernel_parameters
   download_wg_conf
   enable_wireguard_service
+  
+  %{if enable_prometheus_exporters ~}
   enable_prom_node_exporter
   enable_prom_wireguard_exporter
+  %{ endif ~}
+
+  %{if enable_cloudwatch_monitoring ~}
   enable_cloudwatch_agent
+  %{ endif ~}
 }
 
 main

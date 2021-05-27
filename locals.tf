@@ -6,9 +6,14 @@ locals {
     templatefile(
       "${path.module}/templates/userdata.sh.tpl",
       {
-        region         = data.aws_region.current.name
-        s3_bucket_name = aws_s3_bucket.main.id
-        interface_name = local.wg_interface_name
+        region                             = data.aws_region.current.name
+        s3_bucket_name                     = aws_s3_bucket.main.id
+        interface_name                     = local.wg_interface_name
+        host_main_interface_name           = var.ec2_instance_main_interface_name
+        enable_prometheus_exporters        = var.enable_prometheus_exporters
+        enable_cloudwatch_monitoring       = var.enable_cloudwatch_monitoring
+        wg_server_name                     = local.wg_server_name
+        cloudwatch_agent_metrics_namespace = local.cloudwatch_agent_metrics_namespace
       }
     )
   )
@@ -38,8 +43,9 @@ locals {
       }
     )
   ]
-  prom_exporters_ports = [9100, 9586]
-  ssm_document_name    = "wireguard-server-reload-${var.name_suffix}"
+  prom_exporters_ports               = [9100, 9586]
+  ssm_document_name                  = "wireguard-server-reload-${var.name_suffix}"
+  cloudwatch_agent_metrics_namespace = "CWAgent-wireguard-${var.name_suffix}"
 }
 
 # Generate a key pair for users with missing public keys

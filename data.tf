@@ -44,10 +44,6 @@ data "aws_kms_alias" "s3" {
   name = "alias/aws/s3"
 }
 
-data "aws_kms_alias" "sqs" {
-  name = "alias/aws/sqs"
-}
-
 data "aws_vpc" "main" {
   id = var.vpc_id
 }
