@@ -1,9 +1,52 @@
+## How to
+This example supports both `terraform` and `terragrunt`
+
+### Run terragrunt
+```shell
+cd examples/
+export AWS_REGION=<your region>
+aws-vault exec $AWS_PROFILE --no-session  -- terragrunt init
+aws-vault exec $AWS_PROFILE --no-session  -- terragrunt plan
+aws-vault exec $AWS_PROFILE --no-session  -- terragrunt apply
+```
+
+### Get WG server's private/public keys
+```shell
+cd examples/
+aws-vault exec $AWS_PROFILE --no-session  -- terragrunt output wireguard_keys
+```
+
+### Run `terraform` in case you don't want to use `terragrunt`
+```shell
+cd examples/
+terraform plan -var-file terraform.tfvars
+```
+
+### Generate pair private/public keys for the client
+```shell
+umask 077 ; wg genkey > privatekey ; wg pubkey < privatekey > publickey
+```
+
+### Add your `publickey` and `allowed_ips`  to the `terraform.tfvars` file
+```shell
+wg_peers = {
+  myuser1 = {
+    public_key  = "<public key for myuser1>"
+    allowed_ips = "10.0.44.2/32"
+  }
+  myuser2 = {
+    public_key  = "<public key for myuser2>"
+    allowed_ips = "10.0.44.3/32"
+  }
+}
+```
+
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | terraform | >= 0.15.0 |
-| aws | ~> 3.42.0 |
+| aws | ~> 3.37.0 |
 | random | ~> 3.1.0 |
 | wireguard | 0.1.3 |
 
@@ -52,4 +95,3 @@
 | wireguard\_server\_host | Wireguard server host |
 | wireguard\_server\_name | Wireguard server name |
 | wireguard\_server\_ports | Wireguard server ports |
-
