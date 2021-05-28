@@ -14,9 +14,9 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   threshold                 = "80"
   treat_missing_data        = "breaching"
   actions_enabled           = true
-  alarm_actions             = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
-  ok_actions                = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
-  insufficient_data_actions = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
+  alarm_actions             = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
+  ok_actions                = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
+  insufficient_data_actions = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
   tags                      = var.tags
 
   dimensions = {
@@ -41,9 +41,9 @@ resource "aws_cloudwatch_metric_alarm" "status_checks" {
   threshold                 = "0"
   treat_missing_data        = "breaching"
   actions_enabled           = true
-  alarm_actions             = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
-  ok_actions                = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
-  insufficient_data_actions = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
+  alarm_actions             = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
+  ok_actions                = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
+  insufficient_data_actions = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
   tags                      = var.tags
 
   dimensions = {
@@ -102,9 +102,9 @@ resource "aws_cloudwatch_metric_alarm" "memory_used" {
   threshold                 = "80"
   treat_missing_data        = "breaching"
   actions_enabled           = true
-  alarm_actions             = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
-  ok_actions                = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
-  insufficient_data_actions = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
+  alarm_actions             = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
+  ok_actions                = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
+  insufficient_data_actions = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
   tags                      = var.tags
 }
 
@@ -159,9 +159,9 @@ resource "aws_cloudwatch_metric_alarm" "disk_used" {
   threshold                 = "80"
   treat_missing_data        = "breaching"
   actions_enabled           = true
-  alarm_actions             = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
-  ok_actions                = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
-  insufficient_data_actions = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
+  alarm_actions             = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
+  ok_actions                = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
+  insufficient_data_actions = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
   tags                      = var.tags
 }
 
@@ -196,9 +196,9 @@ resource "aws_cloudwatch_metric_alarm" "lambda_failure" {
   threshold                 = "1"
   treat_missing_data        = "ignore"
   actions_enabled           = true
-  alarm_actions             = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
-  ok_actions                = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
-  insufficient_data_actions = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
+  alarm_actions             = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
+  ok_actions                = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
+  insufficient_data_actions = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) > 0 ? [aws_sns_topic.main[0].arn] : []
   tags                      = var.tags
 
   depends_on = [
