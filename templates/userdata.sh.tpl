@@ -6,10 +6,8 @@ set -xeu
 install_packages() {
   amazon-linux-extras install epel -y
   curl --tlsv1.2 --retry 3 --retry-delay 5 -Svo /etc/yum.repos.d/jdoss-wireguard-epel-7.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo
-  yum update -y && yum install -y \
-    wireguard-dkms \
-    wireguard-tools \
-    ;
+  yum update -y && yum install "kernel-devel-uname-r == $(uname -r)" -y
+  yum install -y wireguard-dkms wireguard-tools
 }
 
 # Enable IPv4/6 forwarding

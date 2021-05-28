@@ -162,3 +162,9 @@ variable "wg_restart_lambda_max_errors_count" {
   type        = number
   default     = 0
 }
+
+variable "wg_bounce_server_mode" {
+  description = "Allow traffic to be routed to any Internet hosts. By default, traffic is allowed within Wireguard network only"
+  type        = bool
+  default     = false
+}

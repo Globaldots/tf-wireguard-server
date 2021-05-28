@@ -46,6 +46,8 @@ locals {
   prom_exporters_ports               = [9100, 9586]
   ssm_document_name                  = "wireguard-server-reload-${var.name_suffix}"
   cloudwatch_agent_metrics_namespace = "CWAgent-wireguard-${var.name_suffix}"
+  lambda_function_name               = "wireguard-${var.name_suffix}-restart-instances"
+  lambda_cloudwatch_metric_name      = "lambda-${local.lambda_function_name}"
 }
 
 # Generate a key pair for users with missing public keys

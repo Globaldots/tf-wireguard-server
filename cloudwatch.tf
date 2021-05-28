@@ -1,6 +1,6 @@
-#############################
-# CPU metric for Cloudwatch #
-#############################
+####################################
+# High CPU usage CloudWatch alert  #
+####################################
 resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   count                     = var.enable_cloudwatch_monitoring ? 1 : 0
   alarm_name                = "wireguard-${var.name_suffix}-high-cpu-utilization"
@@ -24,9 +24,9 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   }
 }
 
-####################
-# EC2 status check #
-####################
+#############################################
+# EC2 status checks failed CloudWatch alert #
+#############################################
 resource "aws_cloudwatch_metric_alarm" "status_checks" {
   count                     = var.enable_cloudwatch_monitoring ? 1 : 0
   alarm_name                = "wireguard-${var.name_suffix}-status-checks-failed"
@@ -51,6 +51,9 @@ resource "aws_cloudwatch_metric_alarm" "status_checks" {
   }
 }
 
+#############################################
+# High memory (RAM) usage CloudWatch alert  #
+#############################################
 resource "aws_cloudwatch_metric_alarm" "memory_used" {
   count               = var.enable_cloudwatch_monitoring ? 1 : 0
   alarm_name          = "wireguard-${var.name_suffix}-high-memory-usage"
@@ -105,6 +108,9 @@ resource "aws_cloudwatch_metric_alarm" "memory_used" {
   tags                      = var.tags
 }
 
+###############################################
+# High disk (storage) usage CloudWatch alert  #
+###############################################
 resource "aws_cloudwatch_metric_alarm" "disk_used" {
   count               = var.enable_cloudwatch_monitoring ? 1 : 0
   alarm_name          = "wireguard-${var.name_suffix}-high-disk-usage"
@@ -159,3 +165,43 @@ resource "aws_cloudwatch_metric_alarm" "disk_used" {
   tags                      = var.tags
 }
 
+#############################################
+# Lambda function failure CloudWatch alert  #
+#############################################
+resource "aws_cloudwatch_log_metric_filter" "main" {
+  count          = var.enable_cloudwatch_monitoring ? 1 : 0
+  name           = "wireguard-${var.name_suffix}-lambda-reload-config-failure"
+  pattern        = "\"INFO | All Wireguard instances have been reloaded with no issues\""
+  log_group_name = "/aws/lambda/${local.lambda_function_name}"
+
+  metric_transformation {
+    name          = local.lambda_cloudwatch_metric_name
+    namespace     = "lambda"
+    value         = "1"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "lambda_failure" {
+  count                     = var.enable_cloudwatch_monitoring ? 1 : 0
+  alarm_name                = "wireguard-${var.name_suffix}-lambda-reload-config-failure"
+  alarm_description         = "Alarm gets triggered when Lambda function which reloads wireguard-${var.name_suffix} instances fails"
+  comparison_operator       = "LessThanThreshold"
+  metric_name               = local.lambda_cloudwatch_metric_name
+  namespace                 = "lambda"
+  period                    = "60"
+  evaluation_periods        = "1"
+  datapoints_to_alarm       = "1"
+  statistic                 = "Maximum"
+  threshold                 = "1"
+  treat_missing_data        = "ignore"
+  actions_enabled           = true
+  alarm_actions             = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
+  ok_actions                = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
+  insufficient_data_actions = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? [aws_sns_topic.main[0].arn] : []
+  tags                      = var.tags
+
+  depends_on = [
+    aws_cloudwatch_log_metric_filter.main
+  ]
+}

@@ -204,10 +204,11 @@ resource "aws_s3_bucket_object" "main" {
     cidr                     = var.wg_cidr
     private_key              = var.wg_private_key
     dns_server               = var.wg_dns_server
-    peers                    = var.wg_peers
+    peers                    = local.wg_peers
     mtu                      = var.wg_mtu
     wg_interface_name        = local.wg_interface_name
     host_main_interface_name = var.ec2_instance_main_interface_name
+    wg_bounce_server_mode    = var.wg_bounce_server_mode
   })
   tags = var.tags
 }

@@ -19,12 +19,16 @@ wg_peers = {
     public_key  = "BqbBeWQchKoL2VavDhGyypuOkX8trQtKvIolnyOGzTY="
     allowed_ips = "10.0.44.3/32"
   }
-  roman = {
+  rt = {
     public_key  = "U/2FptGTCVaY3laN49blUv1zf8KcD8oVALzQ0j/HSzY="
     allowed_ips = "10.0.44.4/32"
   }
   test_user = {
     public_key  = "" # generate
     allowed_ips = "10.0.45.5/32"
+  }
+  rt-1 = {
+    public_key  = "/XtOqAYLVXzJYfGx5woiajyRLvC7flYXInT57MtpNkE="
+    allowed_ips = "10.0.44.6/32"
   }
 }

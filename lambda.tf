@@ -11,7 +11,7 @@ data "archive_file" "main" {
 # Provides a Lambda Function resource #
 #######################################
 resource "aws_lambda_function" "main" {
-  function_name = "wireguard-${var.name_suffix}-restart-instances"
+  function_name = local.lambda_function_name
   description   = "Function to restart Wireguard (${var.name_suffix}) when configuration file was changed"
   filename      = "${path.module}/lambda/restart-wireguard.zip"
   role          = aws_iam_role.main_lambda.arn
