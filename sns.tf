@@ -2,7 +2,7 @@
 # CloudWatch alarms topic #
 ############################
 resource "aws_sns_topic" "main" {
-  count             = length(var.cloudwatch_alerts_phone_numbers) + length(var.cloudwatch_alerts_emails) > 0 ? 1 : 0
+  count             = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) * (var.enable_cloudwatch_monitoring ? 1 : 0) > 0 ? 1 : 0
   name              = "wireguard-${var.name_suffix}-cloudwatch-alarms"
   kms_master_key_id = "alias/aws/sns"
   policy            = <<EOF

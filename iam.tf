@@ -103,7 +103,7 @@ EOF
             "sns:Publish"
           ],
           "Resource" : [
-            data.aws_kms_alias.sqs.target_key_arn,
+            aws_kms_key.main.arn,
             aws_sqs_queue.main.arn,
             aws_sns_topic.main_lambda.arn
           ]

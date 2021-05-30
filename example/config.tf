@@ -4,7 +4,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.42.0"
+      version = ">= 2.70.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -13,9 +13,6 @@ terraform {
     wireguard = {
       source  = "OJFord/wireguard"
       version = "0.1.3"
-    }
-    null = {
-      source = "hashicorp/null"
     }
   }
 }

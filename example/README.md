@@ -95,4 +95,3 @@ wg_peers = {
 | wireguard\_server\_host | Wireguard server host |
 | wireguard\_server\_name | Wireguard server name |
 | wireguard\_server\_ports | Wireguard server ports |
-

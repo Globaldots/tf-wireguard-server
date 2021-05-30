@@ -4,6 +4,12 @@ variable "ec2_instance_type" {
   default     = "t3a.micro"
 }
 
+variable "ec2_instance_main_interface_name" {
+  type        = string
+  description = "EC2 instance main network interface name"
+  default     = "eth0"
+}
+
 variable "ec2_iam_policy_names" {
   description = "Additional IAM policies to assign to EC2 instances through instance profile"
   type        = list(string)
@@ -121,15 +127,27 @@ variable "dns_zone_name" {
   type        = string
 }
 
+variable "enable_prometheus_exporters" {
+  type        = bool
+  description = "Run Prometheus Exporters (Node Exporter & Wireguard Exporter) on EC2 instances"
+  default     = true
+}
+
+variable "enable_cloudwatch_monitoring" {
+  type        = bool
+  description = "Enable CloudWatch monitoring of Wireguard resources"
+  default     = true
+}
+
 variable "cloudwatch_alerts_phone_numbers" {
-  description = "Phone numbers to get monitoring alerts from CloudWatch"
   type        = list(string)
+  description = "Phone numbers to get monitoring alerts from CloudWatch. Ignored when enable_cloudwatch_monitoring = false."
   default     = []
 }
 
 variable "cloudwatch_alerts_emails" {
-  description = "Email addresses to get monitoring alerts from CloudWatch"
   type        = list(string)
+  description = "Email addresses to get monitoring alerts from CloudWatch. Ignored when enable_cloudwatch_monitoring = false."
   default     = []
 }
 
@@ -143,4 +161,10 @@ variable "wg_restart_lambda_max_errors_count" {
   description = "Lambda which restarts Wireguard instances when configuration changes detected will stop execution if number of errors exceed this value"
   type        = number
   default     = 0
+}
+
+variable "wg_bounce_server_mode" {
+  description = "Allow traffic to be routed to any Internet hosts. By default, traffic is allowed within Wireguard network only"
+  type        = bool
+  default     = false
 }
