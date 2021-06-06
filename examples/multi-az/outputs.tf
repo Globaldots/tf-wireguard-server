@@ -121,7 +121,3 @@ output "iam_instance_profile_id" {
   description = "ID of IAM instance profile to access S3 bucket"
   value       = module.wg.iam_instance_profile_id
 }
-
-# output "snat_rule_addresses" {
-#   value = module.wg.snat_rule_addresses
-# }
