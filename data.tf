@@ -44,6 +44,10 @@ data "aws_kms_alias" "s3" {
   name = "alias/aws/s3"
 }
 
+data "aws_kms_alias" "ebs" {
+  name = "alias/aws/ebs"
+}
+
 data "aws_vpc" "main" {
   id = var.vpc_id
 }
@@ -51,4 +55,3 @@ data "aws_vpc" "main" {
 data "aws_route53_zone" "main" {
   name = "${replace(var.dns_zone_name, "/\\.$/", "")}."
 }
-

@@ -16,9 +16,21 @@ resource "aws_launch_template" "main" {
   image_id                = data.aws_ami.ami.id
   instance_type           = var.ec2_instance_type
   key_name                = var.ssh_keypair_name
-  user_data               = local.user_data
+  user_data               = local.ec2_user_data
   disable_api_termination = var.enable_termination_protection ? false : true
   vpc_security_group_ids  = [aws_security_group.instance.id]
+  ebs_optimized           = true
+
+  block_device_mappings {
+    device_name = data.aws_ami.ami.root_device_name
+    ebs {
+      delete_on_termination = true
+      encrypted             = true
+      volume_type           = "gp2"
+      volume_size           = 25
+      kms_key_id            = data.aws_kms_alias.ebs.id
+    }
+  }
 
   iam_instance_profile {
     arn = aws_iam_instance_profile.main.arn

@@ -41,10 +41,10 @@ resource "aws_security_group_rule" "instance-ingress-2" {
 # Provides a security group rule resource #
 ###########################################
 resource "aws_security_group_rule" "instance-ingress-3" {
-  count             = length(local.prom_exporters_ports) * (var.enable_prometheus_exporters ? 1 : 0)
+  count             = length(local.prometheus_exporters_ports) * (var.prometheus_exporters_enable ? 1 : 0)
   type              = "ingress"
-  from_port         = local.prom_exporters_ports[count.index]
-  to_port           = local.prom_exporters_ports[count.index]
+  from_port         = local.prometheus_exporters_ports[count.index]
+  to_port           = local.prometheus_exporters_ports[count.index]
   cidr_blocks       = [data.aws_vpc.main.cidr_block]
   protocol          = "tcp"
   security_group_id = aws_security_group.instance.id

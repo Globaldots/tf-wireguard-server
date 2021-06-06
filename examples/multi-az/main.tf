@@ -38,7 +38,7 @@ resource "aws_key_pair" "main" {
 
 # Envoke the Wireguard module
 module "wg" {
-  source = "../"
+  source = "../../"
 
   vpc_id                            = module.vpc.vpc_id
   public_subnet_cidrs               = module.vpc.public_subnets_cidr_blocks

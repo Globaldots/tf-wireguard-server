@@ -1,9 +1,67 @@
-####################################
-# High CPU usage CloudWatch alert  #
-####################################
+##############
+# Log groups #
+##############
+resource "aws_kms_key" "cloudwatch_logs" {
+  description         = "KMS key for CloudWatch Logs"
+  enable_key_rotation = true
+  policy              = <<EOF
+{
+ "Version": "2012-10-17",
+    "Id": "KMSCloudWatchLogs",
+    "Statement": [
+        {
+            "Sid": "AllowFullAccessByRoot",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+            },
+            "Action": "kms:*",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "logs.${data.aws_region.current.name}.amazonaws.com"
+            },
+            "Action": [
+                "kms:Encrypt*",
+                "kms:Decrypt*",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+                "kms:Describe*"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "ArnEquals": {
+                    "kms:EncryptionContext:aws:logs:arn": "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*"
+                }
+            }
+        }    
+    ]
+}
+EOF
+  tags                = var.tags
+}
+
+resource "aws_kms_alias" "cloudwatch_logs" {
+  name          = "alias/cloudwatch"
+  target_key_id = aws_kms_key.cloudwatch_logs.key_id
+}
+
+resource "aws_cloudwatch_log_group" "main" {
+  for_each          = local.cloudwatch_log_groups
+  name              = each.value
+  retention_in_days = var.cloudwatch_log_retention_days
+  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
+  tags              = var.tags
+}
+
+###################################
+# High CPU usage CloudWatch alert #
+###################################
 resource "aws_cloudwatch_metric_alarm" "cpu_high" {
-  count                     = var.enable_cloudwatch_monitoring ? 1 : 0
-  alarm_name                = "wireguard-${var.name_suffix}-high-cpu-utilization"
+  count                     = var.cloudwatch_monitoring_enable ? 1 : 0
+  alarm_name                = "ec2-high-cpu-utilization-wireguard-${var.name_suffix}"
   alarm_description         = "Alarm gets triggered by high CPU utilization of wireguard-${var.name_suffix} EC2 instances"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
@@ -28,8 +86,8 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
 # EC2 status checks failed CloudWatch alert #
 #############################################
 resource "aws_cloudwatch_metric_alarm" "status_checks" {
-  count                     = var.enable_cloudwatch_monitoring ? 1 : 0
-  alarm_name                = "wireguard-${var.name_suffix}-status-checks-failed"
+  count                     = var.cloudwatch_monitoring_enable ? 1 : 0
+  alarm_name                = "ec2-status-checks-failed-wireguard-${var.name_suffix}"
   alarm_description         = "Alarm gets triggered by failed EC2 status checks of wireguard-${var.name_suffix} instances"
   comparison_operator       = "GreaterThanThreshold"
   metric_name               = "StatusCheckFailed"
@@ -51,12 +109,12 @@ resource "aws_cloudwatch_metric_alarm" "status_checks" {
   }
 }
 
-#############################################
-# High memory (RAM) usage CloudWatch alert  #
-#############################################
+############################################
+# High memory (RAM) usage CloudWatch alert #
+############################################
 resource "aws_cloudwatch_metric_alarm" "memory_used" {
-  count               = var.enable_cloudwatch_monitoring ? 1 : 0
-  alarm_name          = "wireguard-${var.name_suffix}-high-memory-usage"
+  count               = var.cloudwatch_monitoring_enable ? 1 : 0
+  alarm_name          = "ec2-high-memory-usage-wireguard-${var.name_suffix}"
   alarm_description   = "Alarm gets triggered when memory (RAM) usage of wireguard-${var.name_suffix} EC2 instances hits 80%"
   comparison_operator = "GreaterThanThreshold"
 
@@ -108,12 +166,12 @@ resource "aws_cloudwatch_metric_alarm" "memory_used" {
   tags                      = var.tags
 }
 
-###############################################
-# High disk (storage) usage CloudWatch alert  #
-###############################################
+##############################################
+# High disk (storage) usage CloudWatch alert #
+##############################################
 resource "aws_cloudwatch_metric_alarm" "disk_used" {
-  count               = var.enable_cloudwatch_monitoring ? 1 : 0
-  alarm_name          = "wireguard-${var.name_suffix}-high-disk-usage"
+  count               = var.cloudwatch_monitoring_enable ? 1 : 0
+  alarm_name          = "ec2-high-disk-usage-wireguard-${var.name_suffix}"
   alarm_description   = "Alarm gets triggered when disk storage usage of wireguard-${var.name_suffix} EC2 instances hits 80%"
   comparison_operator = "GreaterThanThreshold"
 
@@ -165,29 +223,31 @@ resource "aws_cloudwatch_metric_alarm" "disk_used" {
   tags                      = var.tags
 }
 
-#############################################
-# Lambda function failure CloudWatch alert  #
-#############################################
+############################################
+# Lambda function failure CloudWatch alert #
+############################################
 resource "aws_cloudwatch_log_metric_filter" "main" {
-  count          = var.enable_cloudwatch_monitoring ? 1 : 0
+  count          = var.cloudwatch_monitoring_enable ? 1 : 0
   name           = "wireguard-${var.name_suffix}-lambda-reload-config-failure"
   pattern        = "\"INFO | All Wireguard instances have been reloaded with no issues\""
-  log_group_name = "/aws/lambda/${local.lambda_function_name}"
+  log_group_name = local.cloudwatch_log_groups["lambda"]
 
   metric_transformation {
-    name          = local.lambda_cloudwatch_metric_name
+    name          = local.cloudwatch_lambda_status_metric_name
     namespace     = "lambda"
     value         = "1"
     default_value = "0"
   }
+
+  depends_on = [aws_cloudwatch_log_group.main]
 }
 
 resource "aws_cloudwatch_metric_alarm" "lambda_failure" {
-  count                     = var.enable_cloudwatch_monitoring ? 1 : 0
+  count                     = var.cloudwatch_monitoring_enable ? 1 : 0
   alarm_name                = "wireguard-${var.name_suffix}-lambda-reload-config-failure"
   alarm_description         = "Alarm gets triggered when Lambda function which reloads wireguard-${var.name_suffix} instances fails"
   comparison_operator       = "LessThanThreshold"
-  metric_name               = local.lambda_cloudwatch_metric_name
+  metric_name               = local.cloudwatch_lambda_status_metric_name
   namespace                 = "lambda"
   period                    = "60"
   evaluation_periods        = "1"

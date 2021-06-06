@@ -13,22 +13,32 @@ dns_zone_name                     = "egorzp.info"
 wg_peers = {
   yurii = {
     public_key  = "dRWcZBv2++23GZ0DdoFLrXvGch4lcZ2Fj7yeaSAUB2I="
-    allowed_ips = "10.0.44.2/32"
+    # allowed_ips = "10.0.44.2/32"
+    peer_ip = "10.0.44.2/32"
+    allowed_subnets = ["10.0.44.0/24", "8.8.8.8/32"]
   }
   alex = {
     public_key  = "BqbBeWQchKoL2VavDhGyypuOkX8trQtKvIolnyOGzTY="
-    allowed_ips = "10.0.44.3/32"
+    # allowed_ips = "10.0.44.3/32"
+    peer_ip = "10.0.44.3/32"
+    allowed_subnets = ["10.0.44.0/24", "8.8.8.8/32"]
   }
   rt = {
     public_key  = "U/2FptGTCVaY3laN49blUv1zf8KcD8oVALzQ0j/HSzY="
-    allowed_ips = "10.0.44.4/32"
+    # allowed_ips = "10.0.44.4/32"
+    peer_ip = "10.0.44.4/32"
+    allowed_subnets = ["0.0.0.0/0"]
   }
   test_user = {
     public_key  = "" # generate
-    allowed_ips = "10.0.45.5/32"
+    # allowed_ips = "10.0.45.5/32"
+    peer_ip = "10.0.44.5/32"
+    allowed_subnets = ["10.0.44.0/24", "8.8.8.8/32"]
   }
   rt-1 = {
     public_key  = "/XtOqAYLVXzJYfGx5woiajyRLvC7flYXInT57MtpNkE="
-    allowed_ips = "10.0.44.6/32"
+    # allowed_ips = "10.0.44.6/32"
+    peer_ip = "10.0.44.6/32"
+    allowed_subnets = ["0.0.0.0/0"]
   }
 }

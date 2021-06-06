@@ -35,6 +35,8 @@ resource "aws_lambda_function" "main" {
     }
   }
 
+  depends_on = [aws_cloudwatch_log_group.main]
+
   tags = var.tags
 }
 

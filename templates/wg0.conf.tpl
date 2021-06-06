@@ -1,14 +1,16 @@
+##############################################
+# Managed by Terraform. Don't edit manually! #
+##############################################
+
 [Interface]
 # Name = server ${name}
 Address = ${address}
 ListenPort = 51820
 MTU = ${mtu}
 
-PreUp = aws s3 cp s3://${s3_bucket_name}/${wg_interface_name}.conf  /etc/wireguard/ --region ${region}
-%{if wg_bounce_server_mode ~}
-PostUp = iptables -t nat -A POSTROUTING -s ${cidr} -o ${host_main_interface_name} -j MASQUERADE
-PostDown = iptables -t nat -D POSTROUTING -s ${cidr} -o ${host_main_interface_name} -j MASQUERADE
-%{ endif ~}
+PreUp = aws s3 cp s3://${s3_bucket_name}/${wg_interface_name}.conf /etc/wireguard/ --region ${region} | /usr/bin/logger -t wg-preup-awscli
+PostUp = /usr/local/bin/wg-manage-iptables ${wg_interface_name} up 2>&1 | /usr/bin/logger -t wg-manage-iptables
+PostDown = /usr/local/bin/wg-manage-iptables ${wg_interface_name} down 2>&1 | /usr/bin/logger -t wg-manage-iptables
 
 PrivateKey = ${private_key}
 DNS = ${dns_server}
@@ -17,7 +19,7 @@ DNS = ${dns_server}
 [Peer]
 # Name = ${peer}
 PublicKey = ${config.public_key}
-AllowedIPs = ${config.allowed_ips}
+AllowedIPs = ${config.peer_ip} # AllowSubnetsAccess = ${config.allowed_subnets_str}
 PersistentKeepalive = 25
 
 %{ endfor ~}
