@@ -20,7 +20,7 @@ output "wireguard_server_endpoints" {
 
 output "wireguard_client_configs" {
   description = "Example configuration files for Wireguard clients"
-  value       = local.wireguard_client_configs
+  value       = local.wg_client_configs
 }
 
 output "launch_template_arn" {

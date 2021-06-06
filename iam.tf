@@ -150,7 +150,6 @@ EOF
             "logs:PutLogEvents",
             "logs:DescribeLogStreams",
             "logs:GetLogEvents",
-            "logs:CreateLogGroup",
             "logs:PutRetentionPolicy",
           ],
           "Resource" : [

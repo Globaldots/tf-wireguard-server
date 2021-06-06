@@ -60,6 +60,8 @@ resource "aws_s3_bucket_public_access_block" "main" {
 # Wireguard configuration S3 bucket access logs #
 #################################################
 resource "aws_s3_bucket" "main_logs" {
+  # tfsec:ignore:AWS005
+  # tfsec:ignore:AWS077
   bucket        = "${var.s3_bucket_name_prefix}-wireguard-configuration-${var.name_suffix}-logs"
   acl           = "log-delivery-write"
   force_destroy = true
@@ -89,8 +91,9 @@ resource "aws_s3_bucket_public_access_block" "main_logs" {
 ################################
 # S3 bucket for LB access logs #
 ################################
-# tfsec:ignore:AWS002
 resource "aws_s3_bucket" "access_logs" {
+  # tfsec:ignore:AWS077
+  # tfsec:ignore:AWS002
   bucket        = "${var.s3_bucket_name_prefix}-wireguard-access-logs-${var.name_suffix}"
   acl           = "private"
   force_destroy = true
@@ -194,21 +197,8 @@ resource "aws_s3_bucket_notification" "main" {
 # Upload Wireguard configuration from template #
 ################################################
 resource "aws_s3_bucket_object" "main" {
-  bucket = aws_s3_bucket.main.id
-  key    = "${local.wg_interface_name}.conf"
-  content = templatefile("${path.module}/templates/wg0.conf.tpl", {
-    name                     = local.wg_server_name
-    address                  = "${cidrhost(var.wg_cidr, 1)}/${replace(var.wg_cidr, "/.*\\//", "")}"
-    s3_bucket_name           = aws_s3_bucket.main.id
-    region                   = aws_s3_bucket.main.region
-    cidr                     = var.wg_cidr
-    private_key              = var.wg_private_key
-    dns_server               = var.wg_dns_server
-    peers                    = local.wg_peers
-    mtu                      = var.wg_mtu
-    wg_interface_name        = local.wg_interface_name
-    host_main_interface_name = var.ec2_instance_main_interface_name
-    wg_bounce_server_mode    = var.wg_bounce_server_mode
-  })
-  tags = var.tags
+  bucket  = aws_s3_bucket.main.id
+  key     = "${local.wg_interface_name}.conf"
+  content = local.wg_server_config
+  tags    = var.tags
 }

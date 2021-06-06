@@ -2,7 +2,7 @@
 # CloudWatch alarms topic #
 ############################
 resource "aws_sns_topic" "main" {
-  count             = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) * (var.enable_cloudwatch_monitoring ? 1 : 0) > 0 ? 1 : 0
+  count             = length(concat(var.cloudwatch_alerts_phone_numbers, var.cloudwatch_alerts_emails)) * (var.cloudwatch_monitoring_enable ? 1 : 0) > 0 ? 1 : 0
   name              = "wireguard-${var.name_suffix}-cloudwatch-alarms"
   kms_master_key_id = "alias/aws/sns"
   policy            = <<EOF
@@ -48,7 +48,7 @@ resource "aws_sns_topic_subscription" "text" {
 #####################################################
 # Provides a resource for subscribing to SNS topics #
 #####################################################
-// Email subscriptions must be confirmed by clicking on the URL in confirmation email.
+# Email subscriptions must be confirmed by clicking on the URL in confirmation email.
 resource "aws_sns_topic_subscription" "email" {
   count     = length(var.cloudwatch_alerts_emails)
   topic_arn = aws_sns_topic.main[0].arn

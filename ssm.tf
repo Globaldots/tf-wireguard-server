@@ -22,7 +22,7 @@ resource "aws_ssm_document" "main" {
          "inputs": {
             "runCommand": [
               "aws s3 cp s3://${aws_s3_bucket.main.id}/${local.wg_interface_name}.conf  /etc/wireguard/ --region ${data.aws_region.current.name}",
-              "/bin/bash -c \"wg syncconf ${local.wg_interface_name} <(wg-quick strip ${local.wg_interface_name})\""
+              "/bin/bash -c \"wg-quick down ${local.wg_interface_name} && wg-quick up ${local.wg_interface_name}\""
             ]
          }
       }

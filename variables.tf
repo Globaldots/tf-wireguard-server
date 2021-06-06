@@ -1,7 +1,7 @@
 variable "ec2_instance_type" {
   description = "EC2 instance type"
   type        = string
-  default     = "t3a.micro"
+  default     = "t3.micro"
 }
 
 variable "ec2_instance_main_interface_name" {
@@ -73,7 +73,7 @@ variable "wg_dns_server" {
 
 variable "wg_peers" {
   description = "Wireguard clients (peers) configuration"
-  type        = map(object({ public_key = string, allowed_ips = string }))
+  type        = map(object({ public_key = string, peer_ip = string, allowed_subnets = list(string) }))
   default     = {}
 }
 
@@ -127,13 +127,13 @@ variable "dns_zone_name" {
   type        = string
 }
 
-variable "enable_prometheus_exporters" {
+variable "prometheus_exporters_enable" {
   type        = bool
   description = "Run Prometheus Exporters (Node Exporter & Wireguard Exporter) on EC2 instances"
   default     = true
 }
 
-variable "enable_cloudwatch_monitoring" {
+variable "cloudwatch_monitoring_enable" {
   type        = bool
   description = "Enable CloudWatch monitoring of Wireguard resources"
   default     = true
@@ -141,14 +141,20 @@ variable "enable_cloudwatch_monitoring" {
 
 variable "cloudwatch_alerts_phone_numbers" {
   type        = list(string)
-  description = "Phone numbers to get monitoring alerts from CloudWatch. Ignored when enable_cloudwatch_monitoring = false."
+  description = "Phone numbers to get monitoring alerts from CloudWatch. Ignored when cloudwatch_monitoring_enable = false."
   default     = []
 }
 
 variable "cloudwatch_alerts_emails" {
   type        = list(string)
-  description = "Email addresses to get monitoring alerts from CloudWatch. Ignored when enable_cloudwatch_monitoring = false."
+  description = "Email addresses to get monitoring alerts from CloudWatch. Ignored when cloudwatch_monitoring_enable = false."
   default     = []
+}
+
+variable "cloudwatch_log_retention_days" {
+  type        = number
+  description = "For how long CloudWatch will store log files (days)"
+  default     = 180
 }
 
 variable "wg_restart_lambda_timeout_sec" {
@@ -161,10 +167,4 @@ variable "wg_restart_lambda_max_errors_count" {
   description = "Lambda which restarts Wireguard instances when configuration changes detected will stop execution if number of errors exceed this value"
   type        = number
   default     = 0
-}
-
-variable "wg_bounce_server_mode" {
-  description = "Allow traffic to be routed to any Internet hosts. By default, traffic is allowed within Wireguard network only"
-  type        = bool
-  default     = false
 }

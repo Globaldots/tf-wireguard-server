@@ -45,6 +45,11 @@ EOF
   tags = var.tags
 }
 
+resource "aws_kms_alias" "main" {
+  name          = "alias/sqs"
+  target_key_id = aws_kms_key.main.key_id
+}
+
 resource "aws_sqs_queue" "main" {
   name                       = "wireguard-configuration-${var.name_suffix}"
   visibility_timeout_seconds = 3600
