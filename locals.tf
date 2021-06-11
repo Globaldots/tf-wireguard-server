@@ -5,6 +5,7 @@ locals {
   wg_server_name             = "wireguard-${var.name_suffix}"
   wg_identification_tag_name = "wireguard-server-name"
   wg_interface_name          = substr("wg-${var.name_suffix}", 0, 15)
+  wg_server_address          = var.dns_zone_name == "" ? aws_lb.main.dns_name : aws_route53_record.main[0].fqdn
 
   # Build peers map with both existing and generated keys
   wg_peers = {
@@ -83,7 +84,7 @@ locals {
         wg_peer_allowed_subnets = join(", ", v.allowed_subnets)
         wg_server_name          = local.wg_server_name
         wg_server_public_key    = var.wg_public_key
-        wg_server_endpoint      = "${aws_route53_record.main.fqdn}:${contains(var.wg_listen_ports, "4500") ? 4500 : var.wg_listen_ports[0]}"
+        wg_server_endpoint      = contains(var.wg_listen_ports, "4500") ? "${local.wg_server_address}:4500" : "${local.wg_server_address}:${var.wg_listen_ports[0]}"
       }
     )
   ]

@@ -53,5 +53,6 @@ data "aws_vpc" "main" {
 }
 
 data "aws_route53_zone" "main" {
-  name = "${replace(var.dns_zone_name, "/\\.$/", "")}."
+  count = var.dns_zone_name == "" ? 0 : 1
+  name  = "${replace(var.dns_zone_name, "/\\.$/", "")}."
 }

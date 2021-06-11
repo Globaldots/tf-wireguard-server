@@ -5,7 +5,7 @@ output "wireguard_server_name" {
 
 output "wireguard_server_host" {
   description = "Wireguard server host"
-  value       = aws_route53_record.main.fqdn
+  value       = local.wg_server_address
 }
 
 output "wireguard_server_ports" {
@@ -15,7 +15,7 @@ output "wireguard_server_ports" {
 
 output "wireguard_server_endpoints" {
   description = "Wireguard server endpoints"
-  value       = [for port in var.wg_listen_ports : format("%s:%s", aws_route53_record.main.fqdn, port)]
+  value       = [for port in var.wg_listen_ports : format("%s:%s", local.wg_server_address, port)]
 }
 
 output "wireguard_client_configs" {

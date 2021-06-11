@@ -123,8 +123,9 @@ variable "wg_allow_connections_from_subnets" {
 }
 
 variable "dns_zone_name" {
-  description = "Route53 DNS zone name for Wireguard server endpoint"
+  description = "Route53 DNS zone name for Wireguard server endpoint. If not set, AWS LB DNS record is used"
   type        = string
+  default     = ""
 }
 
 variable "prometheus_exporters_enable" {
