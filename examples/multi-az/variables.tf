@@ -59,4 +59,5 @@ variable "wg_allow_connections_from_subnets" {
 variable "dns_zone_name" {
   type        = string
   description = "Route53 DNS zone name for Wireguard server endpoint"
+  default     = ""
 }
