@@ -73,7 +73,7 @@ variable "wg_dns_server" {
 
 variable "wg_peers" {
   description = "Wireguard clients (peers) configuration"
-  type        = map(object({ public_key = string, peer_ip = string, allowed_subnets = list(string) }))
+  type        = map(object({ public_key = string, peer_ip = string, allowed_subnets = list(string), isolated = bool }))
   default     = {}
 }
 

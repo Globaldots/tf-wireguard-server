@@ -37,13 +37,13 @@ add_wireguard_iptables_script() {
   cat <<'EOT' >> /usr/local/bin/wg-manage-iptables
 #!/bin/sh
 
-set -ue
+set -u
 
 WG_INTERFACE_NAME="$${1}"
 ACTION="$${2}"
 
 WG_CONFIGURATION_FOLDER="/etc/wireguard"
-IPTABLES_RULE_COMMENT="SNAT rule for Wireguard - $${WG_INTERFACE_NAME}"
+IPTABLES_RULE_COMMENT="Wireguard - $${WG_INTERFACE_NAME}"
 
 validate_input() {
   if [ ! "$${ACTION}" = "up" ] && [ ! "$${ACTION}" = "down" ]; then
@@ -57,7 +57,7 @@ validate_input() {
   fi
 }
 
-clean_up_wg_iptables_snat_rules() {
+clean_up_wg_iptables_rules() {
   iptables-save | grep -v "$${IPTABLES_RULE_COMMENT}" | iptables-restore
   return $${?}
 }
@@ -84,11 +84,6 @@ check_if_iptables_rule_exists() {
   return $${?}
 }
 
-iptables_run_action() {
-  iptables "$${1}"
-  return $${?}
-}
-
 clean_up() {
   ipset destroy wg > /dev/null 2>&1 || true
 }
@@ -97,7 +92,7 @@ main() {
   echo "INFO | Starting"
   echo "==============================================================================="
   validate_input
-  clean_up_wg_iptables_snat_rules
+  clean_up_wg_iptables_rules
   last_exist_code=$${?}
 
   if [ ! "$${last_exist_code}" -eq 0 ]; then
@@ -107,6 +102,9 @@ main() {
   if [ "$${ACTION}" = "down" ]; then
     return $${last_exist_code}
   fi
+
+  # isolate all clients by default
+  iptables --insert FORWARD -m comment --comment "$${IPTABLES_RULE_COMMENT}" -i "$${WG_INTERFACE_NAME}" -o "$${WG_INTERFACE_NAME}" -j DROP
 
   WG_SERVER_ADDR="$(grep -oE "^Address\s?=.+$" "$${WG_CONFIGURATION_FOLDER}/$${WG_INTERFACE_NAME}.conf" | cut -d'=' -f2 | xargs )"
   if ! (echo "$${WG_SERVER_ADDR}" | grep -qE '^([0-9]{1,3}\.){1,3}[0-9]{1,3}/[0-9]{1,2}$'); then 
@@ -118,6 +116,7 @@ main() {
   echo "$${ADDRESSES}" | while IFS= read -r line; do 
     SOURCE_ADDR="$(echo "$${line}" | cut -d'#' -f1 | cut -d'=' -f2 | xargs)"
     DEST_ADDRS="$(echo "$${line}" | cut -d'#' -f2 | cut -d'=' -f2 | sed 's/ //g')"
+    ISOLATED="$(echo "$${line}" | cut -d'#' -f3 | cut -d'=' -f2 | xargs)"
 
     # TODO: add validation for IPv6
     if ! (addr_is_in_ip_set "$${SOURCE_ADDR}"); then
@@ -131,6 +130,18 @@ main() {
     if ! (echo "$${DEST_ADDRS}" | grep -qE  '^(([0-9]{1,3}\.){1,3}[0-9]{1,3}/[0-9]{1,2},?)+$'); then 
       echo "WARN | Failed to parse peer's allowed subnets list '$${SOURCE_ADDR}'"
       continue
+    fi
+
+    # disable isolation for specific clients
+    if [ "$${ISOLATED}" = "false" ]; then
+      set -- --insert FORWARD -m comment --comment "$${IPTABLES_RULE_COMMENT}" -i "$${WG_INTERFACE_NAME}" -s "$${SOURCE_ADDR}" -d "$${WG_SERVER_ADDR}" -j ACCEPT
+      if check_if_iptables_rule_exists "$${*}"; then
+        echo "INFO | Rule '$${*} can't be added because it already exists'"
+      else
+        if ! (iptables "$${@}"); then
+          echo "WARN | Failed to add iptables rule '$${*}'"
+        fi
+      fi
     fi
      
     for dest_addr in $(echo "$${DEST_ADDRS}" | sed "s/,/ /g"); do

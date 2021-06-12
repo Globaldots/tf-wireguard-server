@@ -16,7 +16,7 @@ variable "wg_listen_ports" {
 
 variable "wg_peers" {
   # type        = map(object({ public_key = string, allowed_ips = string }))
-  type        = map(object({ public_key = string, peer_ip = string, allowed_subnets = list(string) }))
+  type        = map(object({ public_key = string, peer_ip = string, allowed_subnets = list(string), isolated = bool }))
   description = "Wireguard clients (peers) configuration"
 }
 
