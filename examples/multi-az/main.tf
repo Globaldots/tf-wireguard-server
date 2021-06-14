@@ -1,3 +1,7 @@
+/*
+# Wireguard Multi AZ deployment.
+*/
+
 # Get list of available AZs for current region
 data "aws_availability_zones" "main" {
   state = "available"
