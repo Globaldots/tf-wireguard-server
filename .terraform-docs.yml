@@ -21,9 +21,9 @@ output:
   file: "README.md"
   mode: inject
   template: |-
-    []: # (BEGIN_TF_DOCS)
+    <!-- Begin Terraform Docs -->
     {{ .Content }}
-    []: # (END_TF_DOCS)
+    <!-- End Terraform Docs -->
 
 output-values:
   enabled: false
