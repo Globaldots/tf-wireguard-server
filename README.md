@@ -1,4 +1,4 @@
-[]: # (BEGIN_TF_DOCS)
+<!-- Begin Terraform Docs -->
 ## tf-wireguard-server
 WireGuard® is an extremely simple yet fast and modern VPN that utilizes state-of-the-art cryptography. It aims to be faster, simpler, leaner, and more useful than IPsec, while avoiding the massive headache. It intends to be considerably more performant than OpenVPN.
 
@@ -105,7 +105,7 @@ Example code snippets for simplicity reasons don't define all variables which mo
 | <a name="output_wireguard_server_host"></a> [wireguard\_server\_host](#output\_wireguard\_server\_host) | Wireguard server host |
 | <a name="output_wireguard_server_name"></a> [wireguard\_server\_name](#output\_wireguard\_server\_name) | Wireguard server name |
 | <a name="output_wireguard_server_ports"></a> [wireguard\_server\_ports](#output\_wireguard\_server\_ports) | Wireguard server ports |
-[]: # (END_TF_DOCS)      
+<!-- End Terraform Docs -->
 
 ### Contribute
 Any reasonable pull requests are always welcomed. All PRs are subject to automated checks, so please make sure that your changes pass all configured [pre-commit](https://pre-commit.com/) hooks.
