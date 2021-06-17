@@ -7,7 +7,6 @@ s3_bucket_name_prefix = "gd"
 tags = {
   Managed-by = "Terraform"
 }
-enable_termination_protection     = false
 wg_allow_connections_from_subnets = ["0.0.0.0/0"]
 dns_zone_name                     = "egorzp.info"
 wg_peers = {

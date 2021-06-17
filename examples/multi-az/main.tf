@@ -1,7 +1,3 @@
-/*
-# Wireguard Multi AZ deployment.
-*/
-
 # Get list of available AZs for current region
 data "aws_availability_zones" "main" {
   state = "available"
@@ -52,7 +48,6 @@ module "wg" {
   s3_bucket_name_prefix             = var.s3_bucket_name_prefix
   wg_private_key                    = wireguard_asymmetric_key.wg_key_pair.private_key
   wg_public_key                     = wireguard_asymmetric_key.wg_key_pair.public_key
-  wg_listen_ports                   = var.wg_listen_ports
   wg_allow_connections_from_subnets = var.wg_allow_connections_from_subnets
   dns_zone_name                     = var.dns_zone_name
   wg_peers                          = var.wg_peers

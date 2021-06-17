@@ -22,12 +22,12 @@ variable "vpc_id" {
 }
 
 variable "public_subnet_cidrs" {
-  description = "VPC public subnet CIDRs to create NLB in. Multiple subnets are used for HA. AZs of public & private subnets must match"
+  description = "VPC public subnets CIDR to create NLB in. Multiple subnets are used for HA. AZs of public & private subnets must match"
   type        = list(string)
 }
 
 variable "private_subnet_cidrs" {
-  description = "VPC private subnet CIDRs to create EC2 instances in. AZs of public & private subnets must match"
+  description = "VPC private subnets CIDR to create EC2 instances in. AZs of public & private subnets must match"
   type        = list(string)
 }
 
@@ -38,7 +38,7 @@ variable "tags" {
 }
 
 variable "ssh_keypair_name" {
-  description = "EC2 SSH keypair name"
+  description = "EC2 SSH key pair name"
   type        = string
 }
 
@@ -49,7 +49,7 @@ variable "wg_cidr" {
 }
 
 variable "wg_listen_ports" {
-  description = "Wireguard listen ports. These ports will be opened for inbound client Wireguard connections"
+  description = "Wireguard listen ports. These ports will be opened for inbound Wireguard client connections"
   type        = list(string)
   default     = ["51820", "4500", "53"]
 }
@@ -84,7 +84,7 @@ variable "wg_mtu" {
 }
 
 variable "name_suffix" {
-  description = "Suffix to be added to all resources to uniqly identify this setup"
+  description = "Suffix to be added to all resources to uniquely identify this setup"
   type        = string
 }
 
@@ -112,7 +112,7 @@ variable "wg_ha_instance_max_count" {
 }
 
 variable "wg_ha_instance_desired_count" {
-  description = "Desired number of Wireugard EC2 instances (HA configuration)"
+  description = "Desired number of Wireguard EC2 instances (HA configuration)"
   type        = number
   default     = 2
 }
@@ -159,7 +159,7 @@ variable "cloudwatch_log_retention_days" {
 }
 
 variable "wg_restart_lambda_timeout_sec" {
-  description = "Timeout for Lambda which restarts Wireguard instances when configuration changes occured"
+  description = "Timeout for Lambda which restarts Wireguard instances when configuration changes occurred"
   type        = number
   default     = 300
 }

@@ -122,27 +122,27 @@ No modules.
 | <a name="input_ec2_instance_main_interface_name"></a> [ec2\_instance\_main\_interface\_name](#input\_ec2\_instance\_main\_interface\_name) | EC2 instance primary network interface name | `string` | `"eth0"` | no |
 | <a name="input_ec2_instance_type"></a> [ec2\_instance\_type](#input\_ec2\_instance\_type) | EC2 instance type | `string` | `"t3.micro"` | no |
 | <a name="input_enable_termination_protection"></a> [enable\_termination\_protection](#input\_enable\_termination\_protection) | Enable termination protection for resources | `bool` | `true` | no |
-| <a name="input_name_suffix"></a> [name\_suffix](#input\_name\_suffix) | Suffix to be added to all resources to uniqly identify this setup | `string` | n/a | yes |
-| <a name="input_private_subnet_cidrs"></a> [private\_subnet\_cidrs](#input\_private\_subnet\_cidrs) | VPC private subnet CIDRs to create EC2 instances in. AZs of public & private subnets must match | `list(string)` | n/a | yes |
+| <a name="input_name_suffix"></a> [name\_suffix](#input\_name\_suffix) | Suffix to be added to all resources to uniquely identify this setup | `string` | n/a | yes |
+| <a name="input_private_subnet_cidrs"></a> [private\_subnet\_cidrs](#input\_private\_subnet\_cidrs) | VPC private subnets CIDR to create EC2 instances in. AZs of public & private subnets must match | `list(string)` | n/a | yes |
 | <a name="input_prometheus_exporters_enable"></a> [prometheus\_exporters\_enable](#input\_prometheus\_exporters\_enable) | Run Prometheus Exporters (Node Exporter & Wireguard Exporter) on EC2 instances. Disable if you don't plan to use Prometheus monitoring solution | `bool` | `true` | no |
-| <a name="input_public_subnet_cidrs"></a> [public\_subnet\_cidrs](#input\_public\_subnet\_cidrs) | VPC public subnet CIDRs to create NLB in. Multiple subnets are used for HA. AZs of public & private subnets must match | `list(string)` | n/a | yes |
+| <a name="input_public_subnet_cidrs"></a> [public\_subnet\_cidrs](#input\_public\_subnet\_cidrs) | VPC public subnets CIDR to create NLB in. Multiple subnets are used for HA. AZs of public & private subnets must match | `list(string)` | n/a | yes |
 | <a name="input_s3_bucket_name_prefix"></a> [s3\_bucket\_name\_prefix](#input\_s3\_bucket\_name\_prefix) | Prefix to be added to S3 bucket name | `string` | n/a | yes |
-| <a name="input_ssh_keypair_name"></a> [ssh\_keypair\_name](#input\_ssh\_keypair\_name) | EC2 SSH keypair name | `string` | n/a | yes |
+| <a name="input_ssh_keypair_name"></a> [ssh\_keypair\_name](#input\_ssh\_keypair\_name) | EC2 SSH key pair name | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to assign to all resources | `map(string)` | `{}` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | AWS VPC ID for EC2 instances and all other resources | `string` | n/a | yes |
 | <a name="input_wg_allow_connections_from_subnets"></a> [wg\_allow\_connections\_from\_subnets](#input\_wg\_allow\_connections\_from\_subnets) | Allow inbound connections to Wireguard server from these networks. To allow all networks set to `0.0.0.0/0` | `list(string)` | n/a | yes |
 | <a name="input_wg_cidr"></a> [wg\_cidr](#input\_wg\_cidr) | Wireguard network subnet CIDR | `string` | `"10.0.44.0/24"` | no |
 | <a name="input_wg_dns_server"></a> [wg\_dns\_server](#input\_wg\_dns\_server) | DNS server for Wireguard network | `string` | `"8.8.8.8"` | no |
-| <a name="input_wg_ha_instance_desired_count"></a> [wg\_ha\_instance\_desired\_count](#input\_wg\_ha\_instance\_desired\_count) | Desired number of Wireugard EC2 instances (HA configuration) | `number` | `2` | no |
+| <a name="input_wg_ha_instance_desired_count"></a> [wg\_ha\_instance\_desired\_count](#input\_wg\_ha\_instance\_desired\_count) | Desired number of Wireguard EC2 instances (HA configuration) | `number` | `2` | no |
 | <a name="input_wg_ha_instance_max_count"></a> [wg\_ha\_instance\_max\_count](#input\_wg\_ha\_instance\_max\_count) | Maximum number of Wireguard EC2 instances (HA configuration) | `number` | `2` | no |
 | <a name="input_wg_ha_instance_min_count"></a> [wg\_ha\_instance\_min\_count](#input\_wg\_ha\_instance\_min\_count) | Minimum number of Wireguard EC2 instances (HA configuration) | `number` | `2` | no |
-| <a name="input_wg_listen_ports"></a> [wg\_listen\_ports](#input\_wg\_listen\_ports) | Wireguard listen ports. These ports will be opened for inbound client Wireguard connections | `list(string)` | <pre>[<br>  "51820",<br>  "4500",<br>  "53"<br>]</pre> | no |
+| <a name="input_wg_listen_ports"></a> [wg\_listen\_ports](#input\_wg\_listen\_ports) | Wireguard listen ports. These ports will be opened for inbound Wireguard client connections | `list(string)` | <pre>[<br>  "51820",<br>  "4500",<br>  "53"<br>]</pre> | no |
 | <a name="input_wg_mtu"></a> [wg\_mtu](#input\_wg\_mtu) | MTU value for Wireguard network | `number` | `"1420"` | no |
 | <a name="input_wg_peers"></a> [wg\_peers](#input\_wg\_peers) | Wireguard clients (peers) configuration. `Public_key` is optional — will be automatically generated if empty. `Peer_ip` — desired client IP-address or subnet in CIDR notation within Wireguard network (must be within `wg_cidr` range). `Allowed_subnets` — controls what subnets peer will be able to access through Wireguard network (for bounce server mode set to `0.0.0.0/0`). `Isolated` — if `true` peer won't be able to access other Wireguard peers. | `map(object({ public_key = string, peer_ip = string, allowed_subnets = list(string), isolated = bool }))` | `{}` | no |
 | <a name="input_wg_private_key"></a> [wg\_private\_key](#input\_wg\_private\_key) | WireGuard server private key | `string` | n/a | yes |
 | <a name="input_wg_public_key"></a> [wg\_public\_key](#input\_wg\_public\_key) | WireGuard server public key | `string` | n/a | yes |
 | <a name="input_wg_restart_lambda_max_errors_count"></a> [wg\_restart\_lambda\_max\_errors\_count](#input\_wg\_restart\_lambda\_max\_errors\_count) | Lambda which restarts Wireguard instances when configuration changes detected will stop execution if number of errors exceed this value | `number` | `0` | no |
-| <a name="input_wg_restart_lambda_timeout_sec"></a> [wg\_restart\_lambda\_timeout\_sec](#input\_wg\_restart\_lambda\_timeout\_sec) | Timeout for Lambda which restarts Wireguard instances when configuration changes occured | `number` | `300` | no |
+| <a name="input_wg_restart_lambda_timeout_sec"></a> [wg\_restart\_lambda\_timeout\_sec](#input\_wg\_restart\_lambda\_timeout\_sec) | Timeout for Lambda which restarts Wireguard instances when configuration changes occurred | `number` | `300` | no |
 
 ## Outputs
 
