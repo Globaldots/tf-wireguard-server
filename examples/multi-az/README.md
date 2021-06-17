@@ -46,6 +46,13 @@ If you already have Wireguard installed, you may generate all the keys yourself 
 umask 077 ; wg genkey > privatekey ; wg pubkey < privatekey > publickey
 ```
 
+#### DNS
+If your target DNS zone is managed by Route53, this code may create a DNS record for Wireguard endpoint for you.
+Make sure that you define your domain zone name in `dns_zone_name` variable in `terraform.tfvars` file.
+This is optional, if that variable is omitted or empty string passed, the code will skip Route53 resources.
+
+#### SSH key pair
+Please, define your SSH public key in `ec2_ssh_public_key` variable. That key will be used for EC2 instances.
 
 ### AWS connection
 Before running the code, make sure that your AWS connection is working.
