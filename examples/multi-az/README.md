@@ -65,7 +65,7 @@ If you're using `aws-vault` tool, see examples below.
 Several ways of deployment will be presented below. Please, choose the one which fits your needs best.
 Before proceeding make sure that `AWS_REGION` variable is set correctly.
 ```shell
-export AWS_REGION=<you region>
+export AWS_REGION=<YOUR REGION>
 ```
 #### Terragrunt how-to
 ```shell
