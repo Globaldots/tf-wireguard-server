@@ -19,7 +19,8 @@ DNS = ${dns_server}
 [Peer]
 # Name = ${peer}
 PublicKey = ${config.public_key}
-AllowedIPs = ${config.peer_ip} # AllowSubnetsAccess = ${config.allowed_subnets_str}
+AllowedIPs = ${config.peer_ip} # AllowSubnetsAccess = ${config.allowed_subnets_str} # Isolated = ${config.isolated}
 PersistentKeepalive = 25
 
 %{ endfor ~}
+

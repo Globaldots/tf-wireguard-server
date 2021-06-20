@@ -15,25 +15,30 @@ wg_peers = {
     public_key      = "dRWcZBv2++23GZ0DdoFLrXvGch4lcZ2Fj7yeaSAUB2I="
     peer_ip         = "10.0.44.2/32"
     allowed_subnets = ["10.0.44.0/24", "8.8.8.8/32"]
+    isolated        = true
   }
   alex = {
     public_key      = "BqbBeWQchKoL2VavDhGyypuOkX8trQtKvIolnyOGzTY="
     peer_ip         = "10.0.44.3/32"
     allowed_subnets = ["10.0.44.0/24", "8.8.8.8/32"]
+    isolated        = true
   }
   rt = {
     public_key      = "U/2FptGTCVaY3laN49blUv1zf8KcD8oVALzQ0j/HSzY="
     peer_ip         = "10.0.44.4/32"
     allowed_subnets = ["0.0.0.0/0"]
+    isolated        = false
   }
   test_user = {
     public_key      = "" # generate
     peer_ip         = "10.0.44.5/32"
     allowed_subnets = ["10.0.44.0/24", "8.8.8.8/32"]
+    isolated        = true
   }
   rt-1 = {
     public_key      = "/XtOqAYLVXzJYfGx5woiajyRLvC7flYXInT57MtpNkE="
     peer_ip         = "10.0.44.6/32"
     allowed_subnets = ["0.0.0.0/0"]
+    isolated        = false
   }
 }
