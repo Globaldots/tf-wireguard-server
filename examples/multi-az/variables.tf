@@ -8,26 +8,19 @@ variable "az_count" {
   description = "Number of availability zones to create VPC subnets in"
 }
 
-variable "wg_listen_ports" {
-  type        = list(string)
-  description = "Wireguard listen ports"
-  default     = ["51820", "4500", "53"]
-}
-
 variable "wg_peers" {
-  # type        = map(object({ public_key = string, allowed_ips = string }))
   type        = map(object({ public_key = string, peer_ip = string, allowed_subnets = list(string), isolated = bool }))
-  description = "Wireguard clients (peers) configuration"
+  description = "Wireguard clients (peers) configuration. `Public_key` is optional — will be automatically generated if empty. `Peer_ip` — desired client IP-address or subnet in CIDR notation within Wireguard network (must be within `wg_cidr` range). `Allowed_subnets` — controls what subnets peer will be able to access through Wireguard network (for bounce server mode set to `0.0.0.0/0`). `Isolated` — if `true` peer won't be able to access other Wireguard peers."
 }
 
 variable "vpc_private_subnets" {
   type        = list(string)
-  description = "VPC private subnet CIDRs"
+  description = "VPC private subnets CIDR to create EC2 instances in. AZs of public & private subnets must match"
 }
 
 variable "vpc_public_subnets" {
   type        = list(string)
-  description = "VPC public subnet CIDRs"
+  description = "VPC public subnets CIDR to create NLB in. Multiple subnets are used for HA. AZs of public & private subnets must match"
 }
 
 variable "ec2_ssh_public_key" {
@@ -46,18 +39,13 @@ variable "tags" {
   default     = {}
 }
 
-variable "enable_termination_protection" {
-  type        = bool
-  description = "Enable termination protection for resources"
-}
-
 variable "wg_allow_connections_from_subnets" {
   type        = list(string)
-  description = "Restrict Wireguard server availability to defined subnets"
+  description = "Allow inbound connections to Wireguard server from these networks. To allow all networks set to `0.0.0.0/0`"
 }
 
 variable "dns_zone_name" {
   type        = string
-  description = "Route53 DNS zone name for Wireguard server endpoint"
+  description = "Route53 DNS zone name for Wireguard server endpoint. If not set, AWS LB DNS record is used"
   default     = ""
 }

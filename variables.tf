@@ -6,28 +6,28 @@ variable "ec2_instance_type" {
 
 variable "ec2_instance_main_interface_name" {
   type        = string
-  description = "EC2 instance main network interface name"
+  description = "EC2 instance primary network interface name"
   default     = "eth0"
 }
 
 variable "ec2_iam_policy_names" {
-  description = "Additional IAM policies to assign to EC2 instances through instance profile"
+  description = "Additional IAM policies to assign to EC2 instances through instance profiles if needed"
   type        = list(string)
   default     = []
 }
 
 variable "vpc_id" {
-  description = "AWS VPC ID"
+  description = "AWS VPC ID for EC2 instances and all other resources"
   type        = string
 }
 
 variable "public_subnet_cidrs" {
-  description = "VPC public subnet CIDRs to create NLB in (multiple subnets are used for HA, AZs of public & private subnets should match)"
+  description = "VPC public subnets CIDR to create NLB in. Multiple subnets are used for HA. AZs of public & private subnets must match"
   type        = list(string)
 }
 
 variable "private_subnet_cidrs" {
-  description = "VPC private subnet CIDRs to create EC2 instances in (AZs of public & private subnets should match)"
+  description = "VPC private subnets CIDR to create EC2 instances in. AZs of public & private subnets must match"
   type        = list(string)
 }
 
@@ -38,7 +38,7 @@ variable "tags" {
 }
 
 variable "ssh_keypair_name" {
-  description = "EC2 SSH keypair name"
+  description = "EC2 SSH key pair name"
   type        = string
 }
 
@@ -49,7 +49,7 @@ variable "wg_cidr" {
 }
 
 variable "wg_listen_ports" {
-  description = "Wireguard listen ports"
+  description = "Wireguard listen ports. These ports will be opened for inbound Wireguard client connections"
   type        = list(string)
   default     = ["51820", "4500", "53"]
 }
@@ -72,7 +72,7 @@ variable "wg_dns_server" {
 }
 
 variable "wg_peers" {
-  description = "Wireguard clients (peers) configuration"
+  description = "Wireguard clients (peers) configuration. `Public_key` is optional — will be automatically generated if empty. `Peer_ip` — desired client IP-address or subnet in CIDR notation within Wireguard network (must be within `wg_cidr` range). `Allowed_subnets` — controls what subnets peer will be able to access through Wireguard network (for bounce server mode set to `0.0.0.0/0`). `Isolated` — if `true` peer won't be able to access other Wireguard peers."
   type        = map(object({ public_key = string, peer_ip = string, allowed_subnets = list(string), isolated = bool }))
   default     = {}
 }
@@ -84,7 +84,7 @@ variable "wg_mtu" {
 }
 
 variable "name_suffix" {
-  description = "Suffix to be added to all resources"
+  description = "Suffix to be added to all resources to uniquely identify this setup"
   type        = string
 }
 
@@ -100,25 +100,25 @@ variable "enable_termination_protection" {
 }
 
 variable "wg_ha_instance_min_count" {
-  description = "Minimum number of Wiregard instances (HA configuration)"
+  description = "Minimum number of Wireguard EC2 instances (HA configuration)"
   type        = number
   default     = 2
 }
 
 variable "wg_ha_instance_max_count" {
-  description = "Maximum number of Wiregard instances (HA configuration)"
+  description = "Maximum number of Wireguard EC2 instances (HA configuration)"
   type        = number
   default     = 2
 }
 
 variable "wg_ha_instance_desired_count" {
-  description = "Desired number of Wiregard instances (HA configuration)"
+  description = "Desired number of Wireguard EC2 instances (HA configuration)"
   type        = number
   default     = 2
 }
 
 variable "wg_allow_connections_from_subnets" {
-  description = "Restrict Wireguard server availability to defined subnets"
+  description = "Allow inbound connections to Wireguard server from these networks. To allow all networks set to `0.0.0.0/0`"
   type        = list(string)
 }
 
@@ -130,25 +130,25 @@ variable "dns_zone_name" {
 
 variable "prometheus_exporters_enable" {
   type        = bool
-  description = "Run Prometheus Exporters (Node Exporter & Wireguard Exporter) on EC2 instances"
+  description = "Run Prometheus Exporters (Node Exporter & Wireguard Exporter) on EC2 instances. Disable if you don't plan to use Prometheus monitoring solution"
   default     = true
 }
 
 variable "cloudwatch_monitoring_enable" {
   type        = bool
-  description = "Enable CloudWatch monitoring of Wireguard resources"
+  description = "Enable CloudWatch monitoring of Wireguard resources. Disable if you don't plan to use CloudWatch monitoring solution"
   default     = true
 }
 
 variable "cloudwatch_alerts_phone_numbers" {
   type        = list(string)
-  description = "Phone numbers to get monitoring alerts from CloudWatch. Ignored when cloudwatch_monitoring_enable = false."
+  description = "Phone numbers to get monitoring alerts from CloudWatch. Ignored when `cloudwatch_monitoring_enable = false`"
   default     = []
 }
 
 variable "cloudwatch_alerts_emails" {
   type        = list(string)
-  description = "Email addresses to get monitoring alerts from CloudWatch. Ignored when cloudwatch_monitoring_enable = false."
+  description = "Email addresses to get monitoring alerts from CloudWatch. Email alert configuration must be manually approved by clicking on the button in confirmation email. Ignored when `cloudwatch_monitoring_enable = false`"
   default     = []
 }
 
@@ -159,7 +159,7 @@ variable "cloudwatch_log_retention_days" {
 }
 
 variable "wg_restart_lambda_timeout_sec" {
-  description = "Timeout for Lambda which restarts Wireguard instances when configuration changes occured"
+  description = "Timeout for Lambda which restarts Wireguard instances when configuration changes occurred"
   type        = number
   default     = 300
 }
