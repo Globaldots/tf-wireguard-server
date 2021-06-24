@@ -1,3 +1,4 @@
+# The Terraform remote state file in AWS S3
 remote_state {
   backend = "s3"
   generate = {

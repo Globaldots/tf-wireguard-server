@@ -16,7 +16,7 @@ resource "random_pet" "main" {
 # Create a VPC
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.78.0"
+  version = "3.1.0"
 
   name = "Test-VPC-for-WireGuard-${random_pet.main.id}"
 
