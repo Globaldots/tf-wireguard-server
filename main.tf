@@ -81,13 +81,22 @@ resource "aws_launch_template" "main" {
 # Autoscaling group #
 #####################
 resource "aws_autoscaling_group" "main" {
-  min_size         = var.wg_ha_instance_min_count
-  max_size         = var.wg_ha_instance_max_count
-  desired_capacity = var.wg_ha_instance_desired_count
+  name_prefix               = local.asg_name_prefix
+  min_size                  = var.wg_ha_instance_min_count
+  max_size                  = var.wg_ha_instance_max_count
+  desired_capacity          = var.wg_ha_instance_desired_count
+  wait_for_capacity_timeout = 0
 
   launch_template {
     id      = aws_launch_template.main.id
     version = aws_launch_template.main.latest_version
+  }
+
+  initial_lifecycle_hook {
+    name                 = local.asg_initial_lifecycle_hook_name
+    default_result       = "ABANDON"
+    heartbeat_timeout    = 1500
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
   }
 
   lifecycle {

@@ -2,6 +2,16 @@
 
 set -xeu
 
+# FIXME:
+# This target group attribute is required for proper load-balancing but
+# Terraform doesn't support it yet — https://github.com/hashicorp/terraform-provider-aws/issues/17227.
+# As soon as support is added, remove this function and add corresponding parameter to 
+# Target Group resource (nlb.tf).
+set_lb_target_group_attrs() {
+  aws elbv2 modify-target-group-attributes --target-group-arn "${lb_target_group_arn}" \
+    --attributes Key=deregistration_delay.connection_termination.enabled,Value=true --region ${region}
+}
+
 # Install Wireguard and tools
 install_packages() {
   amazon-linux-extras install epel -y
@@ -385,15 +395,28 @@ EOT
   systemctl start amazon-cloudwatch-agent
 }
 
-# Cleanup userdata script
-clean_up() {
-  rm -f "$0"
+# $1 — `CONTINUE` or `ABANDON`
+asg_complete_lifecycle_action() {
+  INSTANCE_ID="$(curl -s http://169.254.169.254/latest/meta-data/instance-id)"
+  ASG_NAME=$(aws ec2 describe-tags --filters "Name=resource-id,Values=$${INSTANCE_ID}" "Name=key,Values=aws:autoscaling:groupName" --region ${region} --query Tags[0].Value --output text)
+  aws autoscaling complete-lifecycle-action --lifecycle-action-result "$${1}" \
+    --instance-id "$${INSTANCE_ID}" \
+    --lifecycle-hook-name "${asg_initial_lifecycle_hook_name}" \
+    --auto-scaling-group-name "$${ASG_NAME}" \
+    --region "${region}"
 }
 
-trap clean_up INT TERM EXIT
+exit_handler() {
+  [ "$${?}" -eq 0 ] && rm -f "$${0}" && exit
+  asg_complete_lifecycle_action "ABANDON"
+  rm -f "$${0}"
+}
+
+trap exit_handler INT TERM EXIT
 
 # Main
 main() {
+  set_lb_target_group_attrs
   install_packages
   tune_kernel_parameters
   download_wg_conf
@@ -408,6 +431,8 @@ main() {
   %{if cloudwatch_monitoring_enable ~}
   enable_cloudwatch_agent
   %{ endif ~}
+
+  asg_complete_lifecycle_action "CONTINUE"
 }
 
 main

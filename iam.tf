@@ -1,8 +1,8 @@
-######################################################
-# IAM role & instance profile for S3 access from EC2 #
-######################################################
+#######################################
+# IAM role & instance profile for EC2 #
+#######################################
 resource "aws_iam_role" "main" {
-  name        = "wireguard-configuration-${var.name_suffix}"
+  name        = "wireguard-configuration-${data.aws_region.current.name}-${var.name_suffix}"
   description = "IAM role to pull Wireguard configuration from ${aws_s3_bucket.main.id} S3 bucket"
   path        = "/wireguard/"
 
@@ -43,6 +43,40 @@ EOF
     })
   }
 
+  inline_policy {
+    name = "AllowASGCompleteLifecycleAction"
+
+    policy = jsonencode({
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Effect" : "Allow",
+          "Action" : ["autoscaling:CompleteLifecycleAction"],
+          "Resource" : ["arn:aws:autoscaling:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:autoScalingGroup:*:autoScalingGroupName/${local.asg_name_prefix}*"]
+        }
+      ]
+    })
+  }
+
+  # FIXME:
+  # This policy is needed as a workaround to allow instance updating certain Target Group values
+  # through userdata script while Terraform doesn't support that action directly — 
+  # https://github.com/hashicorp/terraform-provider-aws/issues/17227.
+  inline_policy {
+    name = "AllowUpdateLBTargetGroupAttrs"
+
+    policy = jsonencode({
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Effect" : "Allow",
+          "Action" : ["elasticloadbalancing:ModifyTargetGroupAttributes"],
+          "Resource" : [aws_lb_target_group.main.arn]
+        }
+      ]
+    })
+  }
+
   tags = var.tags
 }
 
@@ -59,7 +93,7 @@ resource "aws_iam_role_policy_attachment" "main" {
 # Provides an IAM instance profile #
 ####################################
 resource "aws_iam_instance_profile" "main" {
-  name = "wireguard-configuration-${var.name_suffix}"
+  name = "wireguard-configuration-${data.aws_region.current.name}-${var.name_suffix}"
   role = aws_iam_role.main.name
   tags = var.tags
 }
@@ -68,7 +102,7 @@ resource "aws_iam_instance_profile" "main" {
 # IAM role for Lambda #
 #######################
 resource "aws_iam_role" "main_lambda" {
-  name               = "wireguard-${var.name_suffix}-restart-lambda"
+  name               = "wireguard-restart-lambda-${data.aws_region.current.name}-${var.name_suffix}"
   description        = "IAM role for Lambda function which restarts Wireguard instances when configuration changes occur"
   path               = "/wireguard/"
   assume_role_policy = <<EOF

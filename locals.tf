@@ -17,10 +17,12 @@ locals {
     )
   }
 
-  # EC2
+  # EC2 & ASG
   ec2_iam_policy_names = concat(var.ec2_iam_policy_names, [
     "CloudWatchAgentServerPolicy", "AmazonSSMManagedInstanceCore", "AmazonSSMDirectoryServiceAccess"
   ])
+  asg_name_prefix                 = "${local.wg_server_name}-"
+  asg_initial_lifecycle_hook_name = "wait-for-ec2-userdata"
 
   # SSM
   ssm_document_name = "reload-app-instances-wireguard-${var.name_suffix}"
@@ -69,6 +71,8 @@ locals {
         cloudwatch_monitoring_enable       = var.cloudwatch_monitoring_enable
         cloudwatch_agent_metrics_namespace = local.cloudwatch_agent_metrics_namespace
         cloudwatch_log_groups              = local.cloudwatch_log_groups
+        lb_target_group_arn                = aws_lb_target_group.main.arn
+        asg_initial_lifecycle_hook_name    = local.asg_initial_lifecycle_hook_name
       }
     )
   )

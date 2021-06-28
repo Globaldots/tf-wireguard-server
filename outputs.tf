@@ -93,6 +93,11 @@ output "lb_dns_name" {
   value       = aws_lb.main.dns_name
 }
 
+output "lb_zone_id" {
+  description = "Load balancer DNS zone ID"
+  value       = aws_lb.main.zone_id
+}
+
 output "iam_role_arn" {
   description = "ARN of IAM role to access S3 bucket"
   value       = aws_iam_role.main.arn

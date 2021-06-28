@@ -2,7 +2,7 @@
 This setup provides high availability within a single AWS region, utilizing multiple availability zones.
 
 ## Design
-![Wireguard Multi AZ design](./../../docs/aws-wireguard-multi-az-no-app.svg)
+![Wireguard Multi AZ design](./../../docs/aws-wireguard-multi-az-no-app.png)
 
 ### Clients connections
 Multiple EC2 instances are spread across several availability zones within a region. Clients connections get distributed to the instances through highly-available Network Load Balancer with Route53 DNS record attached (optional).
