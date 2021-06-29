@@ -1,7 +1,3 @@
-# TODO:
-# - Replace server endpoint in client configs.
-# - Output client's private keys if generated
-
 # Get list of available AZs for current region
 data "aws_availability_zones" "main-a" {
   provider = aws.region_a
@@ -15,6 +11,26 @@ data "aws_availability_zones" "main-b" {
 
 # Generate private/public key pair for Wireguard server
 resource "wireguard_asymmetric_key" "wg_key_pair" {}
+
+# Generate private/public key pairs for Wireguard clients
+resource "wireguard_asymmetric_key" "wg_key_pair_clients" {
+  for_each = toset(
+    [
+      for k, v in var.wg_peers : k
+      if try(v.public_key, "") == ""
+    ]
+  )
+}
+
+locals {
+  wg_peers = {
+    for k, v in var.wg_peers :
+    k => merge(
+      v,
+      try({ public_key = wireguard_asymmetric_key.wg_key_pair_clients[k].public_key }, {})
+    )
+  }
+}
 
 # Random pet name generator
 resource "random_pet" "main" {
@@ -88,7 +104,7 @@ module "wg-a" {
   wg_private_key                    = wireguard_asymmetric_key.wg_key_pair.private_key
   wg_public_key                     = wireguard_asymmetric_key.wg_key_pair.public_key
   wg_allow_connections_from_subnets = var.wg_allow_connections_from_subnets
-  wg_peers                          = var.wg_peers
+  wg_peers                          = local.wg_peers
   tags                              = var.tags
 }
 
@@ -107,7 +123,7 @@ module "wg-b" {
   wg_private_key                    = wireguard_asymmetric_key.wg_key_pair.private_key
   wg_public_key                     = wireguard_asymmetric_key.wg_key_pair.public_key
   wg_allow_connections_from_subnets = var.wg_allow_connections_from_subnets
-  wg_peers                          = var.wg_peers
+  wg_peers                          = local.wg_peers
   tags                              = var.tags
 }
 

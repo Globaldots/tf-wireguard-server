@@ -33,7 +33,6 @@ Example code snippets for simplicity reasons don't define all variables which mo
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.15.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.70.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.1.0 |
-| <a name="requirement_wireguard"></a> [wireguard](#requirement\_wireguard) | 0.1.3 |
 
 ## Providers
 
@@ -41,7 +40,6 @@ Example code snippets for simplicity reasons don't define all variables which mo
 |------|---------|
 | <a name="provider_archive"></a> [archive](#provider\_archive) | 2.2.0 |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 3.45.0 |
-| <a name="provider_wireguard"></a> [wireguard](#provider\_wireguard) | 0.1.3 |
 
 ## Modules
 
@@ -96,7 +94,6 @@ No modules.
 | [aws_sqs_queue.main_dead_letter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
 | [aws_sqs_queue_policy.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue_policy) | resource |
 | [aws_ssm_document.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_document) | resource |
-| [wireguard_asymmetric_key.generated](https://registry.terraform.io/providers/OJFord/wireguard/0.1.3/docs/resources/asymmetric_key) | resource |
 | [archive_file.main](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [aws_ami.ami](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |

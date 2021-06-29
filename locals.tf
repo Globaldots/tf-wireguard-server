@@ -12,7 +12,6 @@ locals {
     for k, v in var.wg_peers :
     k => merge(
       v,
-      try({ public_key = wireguard_asymmetric_key.generated[k].public_key }, {}),
       { allowed_subnets_str = join(", ", v.allowed_subnets) }
     )
   }
@@ -42,16 +41,6 @@ locals {
     lambda  = "/aws/lambda/${local.lambda_function_name}",
     ssm     = "/aws/ssm/${local.ssm_document_name}",
   }
-}
-
-# Generate a key pair for users with missing public keys
-resource "wireguard_asymmetric_key" "generated" {
-  for_each = toset(
-    [
-      for k, v in var.wg_peers : k
-      if try(v.public_key, "") == ""
-    ]
-  )
 }
 
 #############

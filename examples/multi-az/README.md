@@ -14,8 +14,8 @@ Also, Wireguard instances have PreUp hook enabled which additionally ensures tha
 ## Requirements
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.15.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.70.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.44.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.1.0 |
 | <a name="requirement_wireguard"></a> [wireguard](#requirement\_wireguard) | 0.1.3 |
 
@@ -83,7 +83,10 @@ terragrunt plan
 terragrunt apply
 
 # get wireguard keys after deployment
-terragrunt output wireguard_keys
+terragrunt output wireguard_server_keys
+
+# get wireguard generated client keys after deployment
+terragrunt output wireguard_client_generated_keys
 
 # get wireguard client configuration files after deployment
 terragrunt output wireguard_client_configs
@@ -92,15 +95,18 @@ terragrunt output wireguard_client_configs
 #### Terragrunt with aws-vault how-to
 ```shell
 cd examples/multi-az
-aws-vault exec $AWS_PROFILE --no-session  -- terragrunt init
-aws-vault exec $AWS_PROFILE --no-session  -- terragrunt plan
-aws-vault exec $AWS_PROFILE --no-session  -- terragrunt apply
+aws-vault exec $AWS_PROFILE --no-session -- terragrunt init
+aws-vault exec $AWS_PROFILE --no-session -- terragrunt plan
+aws-vault exec $AWS_PROFILE --no-session -- terragrunt apply
 
 # get wireguard keys after deployment
-aws-vault exec $AWS_PROFILE --no-session  -- terragrunt output wireguard_keys
+aws-vault exec $AWS_PROFILE --no-session -- terragrunt output wireguard_server_keys
+
+# get wireguard generated client keys after deployment
+aws-vault exec $AWS_PROFILE --no-session -- terragrunt output wireguard_client_generated_keys
 
 # get wireguard client configuration files after deployment
-aws-vault exec $AWS_PROFILE --no-session  -- terragrunt output wireguard_client_configs
+aws-vault exec $AWS_PROFILE --no-session -- terragrunt output wireguard_client_configs
 ```
 
 #### Terraform how-to
@@ -111,7 +117,10 @@ terraform plan
 terraform apply
 
 # get wireguard keys after deployment
-terraform output wireguard_keys
+terraform output wireguard_server_keys
+
+# get wireguard generated client keys after deployment
+terraform output wireguard_client_generated_keys
 
 # get wireguard client configuration files after deployment
 terraform output wireguard_client_configs
@@ -120,15 +129,18 @@ terraform output wireguard_client_configs
 #### Terraform with aws-vault how-to
 ```shell
 cd examples/multi-az
-aws-vault exec $AWS_PROFILE --no-session  -- terraform init
-aws-vault exec $AWS_PROFILE --no-session  -- terraform plan
-aws-vault exec $AWS_PROFILE --no-session  -- terraform apply
+aws-vault exec $AWS_PROFILE --no-session -- terraform init
+aws-vault exec $AWS_PROFILE --no-session -- terraform plan
+aws-vault exec $AWS_PROFILE --no-session -- terraform apply
 
 # get wireguard keys after deployment
-aws-vault exec $AWS_PROFILE --no-session  -- terraform output wireguard_keys
+aws-vault exec $AWS_PROFILE --no-session -- terraform output wireguard_server_keys
+
+# get wireguard generated client keys after deployment
+aws-vault exec $AWS_PROFILE --no-session -- terraform output wireguard_client_generated_keys
 
 # get wireguard client configuration files after deployment
-aws-vault exec $AWS_PROFILE --no-session  -- terraform output wireguard_client_configs
+aws-vault exec $AWS_PROFILE --no-session -- terraform output wireguard_client_configs
 ```
 
 ## Resources
@@ -137,6 +149,7 @@ aws-vault exec $AWS_PROFILE --no-session  -- terraform output wireguard_client_c
 | [aws_key_pair.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | resource |
 | [random_pet.main](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/pet) | resource |
 | [wireguard_asymmetric_key.wg_key_pair](https://registry.terraform.io/providers/OJFord/wireguard/0.1.3/docs/resources/asymmetric_key) | resource |
+| [wireguard_asymmetric_key.wg_key_pair_clients](https://registry.terraform.io/providers/OJFord/wireguard/0.1.3/docs/resources/asymmetric_key) | resource |
 | [aws_availability_zones.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
@@ -175,9 +188,10 @@ aws-vault exec $AWS_PROFILE --no-session  -- terraform output wireguard_client_c
 | <a name="output_sqs_queue_dead_letter_id"></a> [sqs\_queue\_dead\_letter\_id](#output\_sqs\_queue\_dead\_letter\_id) | SQS dead letter queue for S3 notifications ID |
 | <a name="output_sqs_queue_id"></a> [sqs\_queue\_id](#output\_sqs\_queue\_id) | SQS queue for S3 notifications ID |
 | <a name="output_wireguard_client_configs"></a> [wireguard\_client\_configs](#output\_wireguard\_client\_configs) | Example configuration files for Wireguard clients |
-| <a name="output_wireguard_keys"></a> [wireguard\_keys](#output\_wireguard\_keys) | Wireguard public & private keys |
+| <a name="output_wireguard_client_generated_keys"></a> [wireguard\_client\_generated\_keys](#output\_wireguard\_client\_generated\_keys) | Wireguard client public & private keys |
 | <a name="output_wireguard_server_endpoints"></a> [wireguard\_server\_endpoints](#output\_wireguard\_server\_endpoints) | Wireguard server endpoints |
 | <a name="output_wireguard_server_host"></a> [wireguard\_server\_host](#output\_wireguard\_server\_host) | Wireguard server host |
+| <a name="output_wireguard_server_keys"></a> [wireguard\_server\_keys](#output\_wireguard\_server\_keys) | Wireguard public & private keys |
 | <a name="output_wireguard_server_name"></a> [wireguard\_server\_name](#output\_wireguard\_server\_name) | Wireguard server name |
 | <a name="output_wireguard_server_ports"></a> [wireguard\_server\_ports](#output\_wireguard\_server\_ports) | Wireguard server ports |
 

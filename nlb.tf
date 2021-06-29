@@ -39,7 +39,7 @@ resource "aws_lb_target_group" "main" {
   health_check {
     protocol            = "TCP"
     port                = 22
-    interval            = 15
+    interval            = 30
     healthy_threshold   = 2
     unhealthy_threshold = 2
   }
