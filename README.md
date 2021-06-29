@@ -5,7 +5,7 @@ WireGuard® is an extremely simple yet fast and modern VPN that utilizes state-o
 This repository contains Terraform code to provision Wireguard server in a highly-available, scalable and secure manner, utilizing benefits of AWS infrastructure. The solution is built on top of such services as EC2, NLB, S3, SQS, Lambda, SSM, CloudWatch, SNS and more.
 
 ## Design
-![Wireguard Multi AZ design](./docs/aws-wireguard-multi-az-no-app.svg)
+![Wireguard Multi AZ design](./docs/aws-wireguard-multi-az-no-app.png)
 
 Above diagram demonstrates highly-available Wireguard setup in a single AWS region. Reference code is located under `examples/multi-az` folder.
 
