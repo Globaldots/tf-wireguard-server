@@ -1,10 +1,16 @@
-output "wireguard_keys" {
+output "wireguard_server_keys" {
   description = "Wireguard public & private keys"
   value = {
     private = wireguard_asymmetric_key.wg_key_pair.private_key
     public  = wireguard_asymmetric_key.wg_key_pair.public_key
   }
   sensitive = true
+}
+
+output "wireguard_client_generated_keys" {
+  description = "Wireguard client public & private keys"
+  value       = wireguard_asymmetric_key.wg_key_pair_clients[*]
+  sensitive   = true
 }
 
 output "wireguard_server_name" {

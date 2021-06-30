@@ -5,7 +5,7 @@ WireGuard® is an extremely simple yet fast and modern VPN that utilizes state-o
 This repository contains Terraform code to provision Wireguard server in a highly-available, scalable and secure manner, utilizing benefits of AWS infrastructure. The solution is built on top of such services as EC2, NLB, S3, SQS, Lambda, SSM, CloudWatch, SNS and more.
 
 ## Design
-![Wireguard Multi AZ design](./docs/aws-wireguard-multi-az-no-app.svg)
+![Wireguard Multi AZ design](./docs/aws-wireguard-multi-az-no-app.png)
 
 Above diagram demonstrates highly-available Wireguard setup in a single AWS region. Reference code is located under `examples/multi-az` folder.
 
@@ -33,7 +33,6 @@ Example code snippets for simplicity reasons don't define all variables which mo
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.15.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.70.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.1.0 |
-| <a name="requirement_wireguard"></a> [wireguard](#requirement\_wireguard) | 0.1.3 |
 
 ## Providers
 
@@ -41,7 +40,6 @@ Example code snippets for simplicity reasons don't define all variables which mo
 |------|---------|
 | <a name="provider_archive"></a> [archive](#provider\_archive) | 2.2.0 |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 3.45.0 |
-| <a name="provider_wireguard"></a> [wireguard](#provider\_wireguard) | 0.1.3 |
 
 ## Modules
 
@@ -96,7 +94,6 @@ No modules.
 | [aws_sqs_queue.main_dead_letter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
 | [aws_sqs_queue_policy.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue_policy) | resource |
 | [aws_ssm_document.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_document) | resource |
-| [wireguard_asymmetric_key.generated](https://registry.terraform.io/providers/OJFord/wireguard/0.1.3/docs/resources/asymmetric_key) | resource |
 | [archive_file.main](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [aws_ami.ami](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
@@ -158,6 +155,7 @@ No modules.
 | <a name="output_launch_template_id"></a> [launch\_template\_id](#output\_launch\_template\_id) | EC2 launch template ID |
 | <a name="output_lb_arn"></a> [lb\_arn](#output\_lb\_arn) | Load balancer ARN |
 | <a name="output_lb_dns_name"></a> [lb\_dns\_name](#output\_lb\_dns\_name) | Load balancer DNS name |
+| <a name="output_lb_zone_id"></a> [lb\_zone\_id](#output\_lb\_zone\_id) | Load balancer DNS zone ID |
 | <a name="output_s3_bucket_access_logs_arn"></a> [s3\_bucket\_access\_logs\_arn](#output\_s3\_bucket\_access\_logs\_arn) | Load balancer access logs S3 bucket ARN |
 | <a name="output_s3_bucket_access_logs_name"></a> [s3\_bucket\_access\_logs\_name](#output\_s3\_bucket\_access\_logs\_name) | Load balancer access logs S3 bucket name |
 | <a name="output_s3_bucket_arn"></a> [s3\_bucket\_arn](#output\_s3\_bucket\_arn) | Wireguard configuration S3 bucket ARN |

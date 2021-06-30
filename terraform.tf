@@ -10,9 +10,5 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.1.0"
     }
-    wireguard = {
-      source  = "OJFord/wireguard"
-      version = "0.1.3"
-    }
   }
 }

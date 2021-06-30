@@ -44,7 +44,7 @@ EOF
 }
 
 resource "aws_kms_alias" "cloudwatch_logs" {
-  name          = "alias/cloudwatch"
+  name          = "alias/cloudwatch-${var.name_suffix}"
   target_key_id = aws_kms_key.cloudwatch_logs.key_id
 }
 

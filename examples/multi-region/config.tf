@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.0.0"
+  required_version = ">= 0.15.0"
 
   required_providers {
     aws = {
@@ -17,5 +17,14 @@ terraform {
   }
 }
 
-provider "aws" {}
+provider "aws" {
+  alias = "region_a"
+  # region is being defined by AWS_REGION environmental variable
+}
+
+provider "aws" {
+  alias  = "region_b"
+  region = var.region_b
+}
+
 provider "wireguard" {}

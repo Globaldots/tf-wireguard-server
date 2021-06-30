@@ -29,12 +29,19 @@ resource "aws_lb_target_group" "main" {
   vpc_id   = var.vpc_id
   tags     = var.tags
 
+  deregistration_delay = 0
+
+  # FIXME:
+  # Option `deregistration_delay.connection_termination.enabled` needs to be set to `true`
+  # but Terraform currently doesn't support it — https://github.com/hashicorp/terraform-provider-aws/issues/17227
+  # For now that option is being set using `awscli` in EC2 userdata script.
+
   health_check {
     protocol            = "TCP"
     port                = 22
     interval            = 30
-    healthy_threshold   = 3
-    unhealthy_threshold = 3
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
   }
 
   stickiness {

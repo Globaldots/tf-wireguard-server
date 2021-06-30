@@ -46,7 +46,7 @@ EOF
 }
 
 resource "aws_kms_alias" "main" {
-  name          = "alias/sqs"
+  name          = "alias/sqs-${var.name_suffix}"
   target_key_id = aws_kms_key.main.key_id
 }
 

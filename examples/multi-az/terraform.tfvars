@@ -25,7 +25,7 @@ vpc_public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
 ec2_ssh_public_key = "[YOUR SSH PUBLIC KEY]"
 
 # S3
-s3_bucket_name_prefix = "awesome-wg"
+s3_bucket_name_prefix = "[S3 BUCKET NAME PREFIX]"
 
 # Route53
 dns_zone_name = "[YOUR ROUTE53 DNS ZONE NAME WITHOUT TRAILING DOT — example.com]"
